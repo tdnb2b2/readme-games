@@ -9,7 +9,7 @@
 1. **Choose a game** below
 2. **Click "New Issue"** or comment on existing game issue
 3. **Make your move** by commenting the position/number
-4. **Get automatically added as contributor** after your first move!
+4. **Your name appears in the participants list!**
 
 ## 🎯 Available Games
 
@@ -46,8 +46,18 @@
 ## 🏆 Leaderboard - Top 10 Players
 
 <!-- LEADERBOARD_START -->
-*No players yet. Be the first!*
+*まだプレイヤーがいません。最初のプレイヤーになろう！*
 <!-- LEADERBOARD_END -->
+
+---
+
+## 👥 Game Participants
+
+このゲームに参加してくれた全てのプレイヤー:
+
+<!-- PARTICIPANTS_START -->
+*まだ参加者がいません。最初の参加者になろう！*
+<!-- PARTICIPANTS_END -->
 
 ---
 
@@ -57,7 +67,7 @@
 2. **GitHub Actions is triggered** instantly
 3. The system **validates and executes** your move
 4. **README is updated** with the new game state
-5. You're **automatically invited** as a collaborator (if you have a GitHub account)
+5. Your **name is added to the participants list**
 
 ### Performance Optimizations ⚡
 
@@ -86,7 +96,7 @@
 
 ## 🤝 Contributing
 
-Play any game to automatically become a contributor! Want to add more games?
+Play any game to become a participant! Want to add more games?
 
 1. Fork this repository
 2. Add your game in `games/yourgame.py`
