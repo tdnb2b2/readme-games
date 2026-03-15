@@ -6,9 +6,11 @@ Thank you for your interest in contributing! There are several ways you can help
 
 The easiest way to contribute is to play! When you make a move:
 
-1. You'll be **automatically invited** as a collaborator
+1. Your **name appears in the participants list**
 2. Your moves are **recorded in the leaderboard**
 3. You help **test the system** and find bugs
+
+**No special permissions needed** - just play and have fun!
 
 ## 🐛 Report Bugs
 
@@ -86,6 +88,7 @@ self.games = {
 # In GameManager.load_data:
 self.data = {
     'players': {},
+    'participants': [],
     'tictactoe': {...},
     'reversi': {...},
     'guess': {...},
