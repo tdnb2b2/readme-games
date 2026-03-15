@@ -1,0 +1,18 @@
+{
+  "players": {},
+  "tictactoe": {
+    "board": null,
+    "turn": "X",
+    "moves": []
+  },
+  "reversi": {
+    "board": null,
+    "turn": "black",
+    "moves": []
+  },
+  "guess": {
+    "number": null,
+    "attempts": [],
+    "solved": false
+  }
+}
