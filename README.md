@@ -1,15 +1,27 @@
 # 🎮 README Games Arena
 
 > Play multiple simple games directly in this README! Powered by GitHub Actions for instant response.
+> **📱 Fully mobile-friendly** - works perfectly on GitHub Mobile app!
 
-[![Game Action](https://github.com/tadanobutubutu/readme-games/actions/workflows/game-action.yml/badge.svg)](https://github.com/tadanobutubutu/readme-games/actions/workflows/game-action.yml)
+[![Game Action](https://github.com/tdnb2b2/readme-games/actions/workflows/game-action.yml/badge.svg)](https://github.com/tdnb2b2/readme-games/actions/workflows/game-action.yml)
 
 ## 🚀 Quick Start
 
+### 🖥️ Desktop: Click on the board!
 1. **Choose a game** below
-2. **Click "New Issue"** or comment on existing game issue
-3. **Make your move** by commenting the position/number
-4. **Your name appears in the participants list!**
+2. **Click any empty square** on the game board
+3. **Press "Comment"** button
+4. **Done!** GitHub Actions updates everything instantly
+
+### 📱 Mobile: Works in GitHub app!
+1. **Open this README** in GitHub Mobile
+2. **Tap any empty square** on the game board
+3. **Comment form opens** (stays in GitHub app - no browser redirect!)
+4. **Tap "Comment"** and you're done!
+
+**Your name automatically appears in the participants list!** 🎉
+
+---
 
 ## 🎯 Available Games
 
@@ -19,7 +31,7 @@
 *No active game. Start with: `start ttt` or `start tictactoe`*
 <!-- TICTACTOE_END -->
 
-**Start new game:** [Click here to start Tic-Tac-Toe](https://github.com/tadanobutubutu/readme-games/issues/new?title=Tic-Tac-Toe&body=start%20ttt)
+**🎮 Game Arena:** [Issue #1 - Tic-Tac-Toe](https://github.com/tdnb2b2/readme-games/issues/1) | [Start New Game](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt)
 
 ---
 
@@ -29,7 +41,7 @@
 *No active game. Start with: `start reversi`*
 <!-- REVERSI_END -->
 
-**Start new game:** [Click here to start Reversi](https://github.com/tadanobutubutu/readme-games/issues/new?title=Reversi&body=start%20reversi)
+**🎮 Game Arena:** [Issue #2 - Reversi](https://github.com/tdnb2b2/readme-games/issues/2) | [Start New Game](https://github.com/tdnb2b2/readme-games/issues/2/comments/new?body=start%20reversi)
 
 ---
 
@@ -39,7 +51,7 @@
 *No active game. Start with: `start guess` or `start number`*
 <!-- GUESS_END -->
 
-**Start new game:** [Click here to start Number Guess](https://github.com/tadanobutubutu/readme-games/issues/new?title=Number%20Guess&body=start%20guess)
+**🎮 Game Arena:** [Issue #3 - Number Guess](https://github.com/tdnb2b2/readme-games/issues/3) | [Start New Game](https://github.com/tdnb2b2/readme-games/issues/3/comments/new?body=start%20guess)
 
 ---
 
@@ -61,13 +73,28 @@
 
 ---
 
+## 📱 Mobile-Friendly Design
+
+**GitHub Mobileで完全に動作！**
+
+✅ **アプリ内で完結** - 外部ブラウザに飛ばない！
+✅ **ワンタップでプレイ** - ボードをタップするだけ
+✅ **自動入力** - コメントが自動で入力される
+✅ **超高速** - 10-15秒で反応
+
+**marcizhuのチェスゲームと違い:**
+- ⛔ marcizhu: リンククリック→Chromeにリダイレクト (モバイルで不便)
+- ✅ README Games: GitHubアプリ内で完結！(モバイル完全対応)
+
+---
+
 ## 📖 How It Works
 
-1. When you **comment on an issue** with a move (e.g., `A1`, `D3`, `50`)
-2. **GitHub Actions is triggered** instantly
-3. The system **validates and executes** your move
-4. **README is updated** with the new game state
-5. Your **name is added to the participants list**
+1. **ボードをクリック** - 空いているマスを選ぶ
+2. **GitHub Actionsが発動** - 自動的にワークフロー実行
+3. **ゲームロジック処理** - 移動を検証・実行
+4. **README更新** - ゲーム状態とリーダーボードが更新
+5. **参加者リスト追加** - あなたの名前が追加される
 
 ### Performance Optimizations ⚡
 
@@ -77,14 +104,17 @@
 - **Optimized Python**: No unnecessary imports or computations
 - **Direct README updates**: No external rendering services
 - **Lightweight games**: Simple logic, maximum speed
+- **Clickable boards**: HTML tables with direct comment links
 
 ## 🎮 Game Commands
 
-| Game | Start Command | Move Format | Example |
-|------|---------------|-------------|----------|
-| Tic-Tac-Toe | `start ttt` | `[A-C][1-3]` | `B2`, `A1`, `C3` |
-| Reversi | `start reversi` | `[A-H][1-8]` | `D3`, `E6`, `F5` |
-| Number Guess | `start guess` | `[1-100]` | `50`, `75`, `guess 42` |
+| Game | Start Command | Move Format | Example | Game Arena |
+|------|---------------|-------------|----------|------------|
+| Tic-Tac-Toe | `start ttt` | `[A-C][1-3]` | `B2`, `A1`, `C3` | [Issue #1](https://github.com/tdnb2b2/readme-games/issues/1) |
+| Reversi | `start reversi` | `[A-H][1-8]` | `D3`, `E6`, `F5` | [Issue #2](https://github.com/tdnb2b2/readme-games/issues/2) |
+| Number Guess | `start guess` | `[1-100]` | `50`, `75`, `42` | [Issue #3](https://github.com/tdnb2b2/readme-games/issues/3) |
+
+**📝 Direct Comment:** 直接Issueにコメントすることもできます！
 
 ## 🔧 Technical Stack
 
@@ -92,6 +122,7 @@
 - **Runtime**: Python 3.11 (fastest Python version)
 - **API**: PyGithub (official GitHub API wrapper)
 - **Storage**: Single JSON file (ultra-fast read/write)
+- **UI**: HTML tables with direct comment links (mobile-optimized)
 - **Deployment**: Instant (no build step)
 
 ## 🤝 Contributing
@@ -103,9 +134,17 @@ Play any game to become a participant! Want to add more games?
 3. Update `game.py` to register it
 4. Submit a pull request
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
 ## 📜 Inspiration
 
-Inspired by [@marcizhu's amazing chess README game](https://github.com/marcizhu) and the GitHub Actions community.
+Inspired by [@marcizhu's amazing chess README game](https://github.com/marcizhu/marcizhu) and the GitHub Actions community.
+
+**Improvements over marcizhu's chess:**
+- ✅ Mobile-friendly (stays in GitHub app)
+- ✅ Multiple games support
+- ✅ Leaderboard & participants tracking
+- ✅ No collaborator permissions needed
 
 ## 📄 License
 
@@ -113,4 +152,4 @@ MIT License - Feel free to fork and create your own game!
 
 ---
 
-**Made with ❤️ using GitHub Actions** | [View Workflow](https://github.com/tadanobutubutu/readme-games/blob/main/.github/workflows/game-action.yml) | [Source Code](https://github.com/tadanobutubutu/readme-games)
+**Made with ❤️ using GitHub Actions** | [View Workflow](https://github.com/tdnb2b2/readme-games/blob/main/.github/workflows/game-action.yml) | [Source Code](https://github.com/tdnb2b2/readme-games)
