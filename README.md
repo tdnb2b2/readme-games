@@ -19,7 +19,11 @@
 3. **Comment form opens** (stays in GitHub app - no browser redirect!)
 4. **Tap "Comment"** and you're done!
 
-**Your name automatically appears in the participants list!** 🎉
+**🎉 When you play your first move:**
+- ✅ Your name appears in the **participants list**
+- ✅ You're added to the **leaderboard**
+- ✅ You're **invited as a read-only collaborator** (automatically!)
+- ✅ This repo appears in **your GitHub profile**
 
 ---
 
@@ -73,6 +77,31 @@
 
 ---
 
+## 🔑 Read-Only Collaborator System
+
+**🎉 初回プレイ時に自動でCollaborator招待！**
+
+ゲームを初めてプレイすると、自動的に以下が実行されます：
+
+✅ **Read-Only権限で招待** - `pull` permission (読み取り専用)
+✅ **プロフィールに表示** - あなたのGitHubプロフィールにこのリポジトリが表示される
+✅ **安全** - 書き込み権限なし、読み取りのみ
+✅ **自動** - 手動操作不要
+
+**権限詳細:**
+- ✅ リポジトリの閲覧
+- ✅ Issueへのコメント
+- ✅ フォーク作成
+- ❌ コードの編集・プッシュは不可
+- ❌ 設定変更は不可
+
+**招待の確認方法:**
+1. GitHubのプロフィールを開く
+2. **Organizations** または **Repositories** タブを確認
+3. `tdnb2b2/readme-games` が表示される
+
+---
+
 ## 📱 Mobile-Friendly Design
 
 **GitHub Mobileで完全に動作！**
@@ -93,8 +122,9 @@
 1. **ボードをクリック** - 空いているマスを選ぶ
 2. **GitHub Actionsが発動** - 自動的にワークフロー実行
 3. **ゲームロジック処理** - 移動を検証・実行
-4. **README更新** - ゲーム状態とリーダーボードが更新
-5. **参加者リスト追加** - あなたの名前が追加される
+4. **Collaborator招待** - 初回プレイ時にRead-Onlyで招待
+5. **README更新** - ゲーム状態とリーダーボードが更新
+6. **参加者リスト追加** - あなたの名前が追加される
 
 ### Performance Optimizations ⚡
 
@@ -105,6 +135,7 @@
 - **Direct README updates**: No external rendering services
 - **Lightweight games**: Simple logic, maximum speed
 - **Clickable boards**: HTML tables with direct comment links
+- **Smart invitations**: Only invites first-time players
 
 ## 🎮 Game Commands
 
@@ -123,6 +154,7 @@
 - **API**: PyGithub (official GitHub API wrapper)
 - **Storage**: Single JSON file (ultra-fast read/write)
 - **UI**: HTML tables with direct comment links (mobile-optimized)
+- **Permissions**: Automatic read-only collaborator invitations
 - **Deployment**: Instant (no build step)
 
 ## 🤝 Contributing
@@ -144,7 +176,8 @@ Inspired by [@marcizhu's amazing chess README game](https://github.com/marcizhu/
 - ✅ Mobile-friendly (stays in GitHub app)
 - ✅ Multiple games support
 - ✅ Leaderboard & participants tracking
-- ✅ No collaborator permissions needed
+- ✅ Automatic read-only collaborator invitations
+- ✅ Organization-based (better permission management)
 
 ## 📄 License
 
