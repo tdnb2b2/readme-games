@@ -1,5 +1,6 @@
 {
   "players": {},
+  "participants": [],
   "tictactoe": {
     "board": null,
     "turn": "X",

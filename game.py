@@ -33,6 +33,7 @@ class GameManager:
         else:
             self.data = {
                 'players': {},
+                'participants': [],  # List of all participants
                 'tictactoe': {'board': None, 'turn': 'X', 'moves': []},
                 'reversi': {'board': None, 'turn': 'black', 'moves': []},
                 'guess': {'number': None, 'attempts': [], 'solved': False}
@@ -47,20 +48,13 @@ class GameManager:
             self.data['players'][self.actor] = {'total': 0, 'tictactoe': 0, 'reversi': 0, 'guess': 0}
         self.data['players'][self.actor]['total'] += 1
         self.data['players'][self.actor][game_type] += 1
+        
+        # Add to participants list if not already there
+        if self.actor not in self.data['participants']:
+            self.data['participants'].append(self.actor)
     
     def get_top_players(self, limit=10):
         return sorted(self.data['players'].items(), key=lambda x: x[1]['total'], reverse=True)[:limit]
-    
-    def invite_collaborator(self):
-        try:
-            # Check if user is already a collaborator
-            collabs = [c.login for c in self.repo.get_collaborators()]
-            if self.actor not in collabs and self.actor != self.repo.owner.login:
-                self.repo.add_to_collaborators(self.actor, permission='push')
-                self.issue.create_comment(f"🎉 @{self.actor} has been invited as a collaborator! Check your email for the invitation.")
-        except GithubException as e:
-            # User might not have public email or invitation already sent
-            pass
     
     def parse_move(self):
         body = self.comment_body.lower().strip()
@@ -115,18 +109,42 @@ class GameManager:
             replacement = f"{lb_start}\n{leaderboard}\n{lb_end}"
             content = re.sub(pattern, replacement, content, flags=re.DOTALL)
         
+        # Update participants section
+        participants_section = self.render_participants()
+        p_start = "<!-- PARTICIPANTS_START -->"
+        p_end = "<!-- PARTICIPANTS_END -->"
+        if p_start in content and p_end in content:
+            pattern = f"{re.escape(p_start)}.*?{re.escape(p_end)}"
+            replacement = f"{p_start}\n{participants_section}\n{p_end}"
+            content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+        
         self.repo.update_file('README.md', f'Update README after move by @{self.actor}', content, readme.sha, branch='main')
     
     def render_leaderboard(self):
         top = self.get_top_players()
         if not top:
-            return "*No players yet. Be the first!*"
+            return "*まだプレイヤーがいません。最初のプレイヤーになろう！*"
         
-        md = "| Rank | Player | Total Moves | TTT | Reversi | Guess |\n"
-        md += "|------|--------|-------------|-----|---------|-------|\n"
+        md = "| 順位 | プレイヤー | 総ムーブ数 | TTT | Reversi | Guess |\n"
+        md += "|------|------------|-------------|-----|---------|-------|\n"
         for i, (player, stats) in enumerate(top, 1):
             medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"#{i}"
             md += f"| {medal} | @{player} | {stats['total']} | {stats['tictactoe']} | {stats['reversi']} | {stats['guess']} |\n"
+        return md
+    
+    def render_participants(self):
+        if not self.data['participants']:
+            return "*まだ参加者がいません。最初の参加者になろう！*"
+        
+        total = len(self.data['participants'])
+        md = f"**🎮 総参加者数: {total}人**\n\n"
+        
+        # Display participants as badges
+        for participant in self.data['participants']:
+            moves = self.data['players'].get(participant, {}).get('total', 0)
+            md += f"[![@{participant}](https://img.shields.io/badge/@{participant}-{moves}_moves-blue)]" 
+            md += f"(https://github.com/{participant}) "
+        
         return md
     
     def run(self):
@@ -140,7 +158,6 @@ class GameManager:
         
         if result['success']:
             self.update_player_stats(game_type)
-            self.invite_collaborator()
             self.save_data()
             self.update_readme()
             
