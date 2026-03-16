@@ -85,11 +85,12 @@ class TicTacToe:
             for j in range(self.size):
                 cell = board[i][j]
                 position = f"{chr(65+j)}{i+1}"
+                
                 if cell is None:
-                    if is_active:
-                        link = f"https://github.com/{owner}/{repo}/issues/{self.issue_number}/comments/new?body={position}"
-                    else:
-                        link = f"https://github.com/{owner}/{repo}/issues/{self.issue_number}/comments/new?body=start%20ttt"
+                    # New issue format with title and body pre-filled
+                    title = f"Tic-Tac-Toe:+Move+{position}"
+                    body = "Please+do+not+change+the+title.+Just+click+%22Submit+new+issue%22.+You+don%27t+need+to+do+anything+else+:D"
+                    link = f"https://github.com/{owner}/{repo}/issues/new?title={title}&body={body}"
                     md += f"[{self.symbols[None]}]({link})"
                 elif cell == 'X':
                     md += f"<img src=\"{self.img_x}\" width=40px>"
@@ -101,14 +102,16 @@ class TicTacToe:
         md += "|   | **A** | **B** | **C** |   |\n"
 
         if not is_active:
-            md += "\nClick any square to start\n"
+            md += "\nClick any square to start!\n"
         else:
             empty = []
             for i in range(self.size):
                 for j in range(self.size):
                     if board[i][j] is None:
                         pos = f"{chr(65+j)}{i+1}"
-                        link = f"https://github.com/{owner}/{repo}/issues/{self.issue_number}/comments/new?body={pos}"
+                        title = f"Tic-Tac-Toe:+Move+{pos}"
+                        body = "Please+do+not+change+the+title.+Just+click+%22Submit+new+issue%22.+You+don%27t+need+to+do+anything+else+:D"
+                        link = f"https://github.com/{owner}/{repo}/issues/new?title={title}&body={body}"
                         empty.append(f"[{pos}]({link})")
             md += "\n" + " · ".join(empty) + "\n"
 
