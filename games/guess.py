@@ -32,19 +32,13 @@ class NumberGuess:
         return {'number': None, 'attempts': [], 'solved': False}
 
     def place(self, state, value, player):
-        if value == 'start':
-            state['number'] = random.randint(self.min_num, self.max_num)
-            state['attempts'] = []
-            state['solved'] = False
-            return {'success': True, 'message': f'New round started by @{player}! Guess a number between {self.min_num} and {self.max_num}.'}
-
         if state.get('number') is None:
             state['number'] = random.randint(self.min_num, self.max_num)
             state['attempts'] = []
             state['solved'] = False
 
         if state.get('solved'):
-            return {'success': False, 'message': 'Already solved! Start a new round.'}
+            return {'success': False, 'message': 'Already solved! Wait for admin to start a new round.'}
 
         if not isinstance(value, int) or value < self.min_num or value > self.max_num:
             return {'success': False, 'message': f'Enter a number between {self.min_num} and {self.max_num}'}
@@ -54,7 +48,7 @@ class NumberGuess:
 
         if value == state['number']:
             state['solved'] = True
-            msg = f'Correct! @{player} guessed {state["number"]} in {n_attempts} attempt(s).'
+            msg = f'🎉 Correct! @{player} guessed {state["number"]} in {n_attempts} attempt(s).'
             state['number'] = None
             return {'success': True, 'message': msg}
 
@@ -97,16 +91,12 @@ class NumberGuess:
             links.append(f'[{n}]({url})')
         md += 'Click to guess: ' + ' · '.join(links) + '\n\n'
 
-        if not is_active:
-            start_url = f'https://github.com/{owner}/{repo}/issues/new?title=Number+Guess:+Start+New+Game&body=Just+click+Submit+new+issue'
-            md += f'[Start a new round →]({start_url})\n'
-        else:
-            if attempts:
-                md += '<details>\n  <summary>Last 5 attempts</summary>\n\n'
-                md += '| # | Guess | Player | Hint |\n| :-: | :---: | :----- | :--- |\n'
-                for i, a in enumerate(attempts[-5:], max(1, len(attempts) - 4)):
-                    hint = self._hint(a['guess'], state.get('number'))
-                    md += f'| {i} | **{a["guess"]}** | [@{a["player"]}](https://github.com/{a["player"]}) | {hint} |\n'
-                md += '\n</details>\n'
+        if is_active and attempts:
+            md += '<details>\n  <summary>Last 5 attempts</summary>\n\n'
+            md += '| # | Guess | Player | Hint |\n| :-: | :---: | :----- | :--- |\n'
+            for i, a in enumerate(attempts[-5:], max(1, len(attempts) - 4)):
+                hint = self._hint(a['guess'], state.get('number'))
+                md += f'| {i} | **{a["guess"]}** | [@{a["player"]}](https://github.com/{a["player"]}) | {hint} |\n'
+            md += '\n</details>\n'
 
         return md
