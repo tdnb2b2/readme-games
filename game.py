@@ -62,6 +62,7 @@ class GameManager:
 
     def parse(self):
         t = self.issue_title
+        # 管理者専用リセットコマンド
         if self.actor == self.admin_user:
             if re.search(r'reset.*(ox|tictactoe|tic)', t, re.I):
                 return 'ttt_reset', None
@@ -69,14 +70,14 @@ class GameManager:
                 return 'rev_reset', None
             if re.search(r'reset.*(guess)', t, re.I):
                 return 'guess_reset', None
+        # 有効なゲームコマンドのみ受け付ける（数字のみ）
         m = re.match(r'Tic-Tac-Toe:\s*Put\s+([A-Ca-c][1-3])\s*$', t)
         if m: return 'ttt', m.group(1).upper()
         m = re.match(r'Reversi:\s*Put\s+([A-Ha-h][1-8])\s*$', t)
         if m: return 'rev', m.group(1).upper()
         m = re.match(r'Number\s+Guess:\s*(\d+)\s*$', t, re.I)
         if m: return 'guess', int(m.group(1))
-        if re.match(r'Number\s+Guess:\s*Start', t, re.I):
-            return 'guess', 'start'
+        # それ以外（Start New Game含む）は全てUnknown
         return None, None
 
     def _get_readme(self):
@@ -156,18 +157,16 @@ class GameManager:
     def run(self):
         action, value = self.parse()
 
-        # Unknown command: close issue silently without failing the Action
         if action is None:
             self.issue.create_comment(
                 f'Unknown command: `{self.issue_title}`\n\n'
                 'Expected formats:\n'
                 '- `Tic-Tac-Toe: Put A1` (A1-C3)\n'
                 '- `Reversi: Put D4` (A1-H8)\n'
-                '- `Number Guess: 50` (1-100)\n'
-                '- `Number Guess: Start New Game`'
+                '- `Number Guess: 50` (1-100)'
             )
             self.issue.edit(state='closed')
-            sys.exit(0)  # exit cleanly so Action shows green
+            sys.exit(0)
 
         readme_obj, content = self._get_readme()
         result = None
