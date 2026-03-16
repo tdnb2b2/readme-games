@@ -17,7 +17,7 @@ class TicTacToe:
             state['board'] = self.create_board()
             state['turn'] = 'X'
             state['moves'] = []
-            return {'success': True, 'message': f'New Tic-Tac-Toe game started by @{player}! X goes first.'}
+            return {'success': True, 'message': f'New Tic-Tac-Toe game started by @{player}. X goes first.'}
 
         if not state['board']:
             state['board'] = self.create_board()
@@ -46,7 +46,7 @@ class TicTacToe:
             return {'success': True, 'message': msg}
 
         if self.is_full(state['board']):
-            msg = f"Draw! Last move by @{player}"
+            msg = f'Draw! Last move by @{player}'
             state['board'] = None
             return {'success': True, 'message': msg}
 
@@ -101,7 +101,7 @@ class TicTacToe:
         md += "|   | **A** | **B** | **C** |   |\n"
 
         if not is_active:
-            md += "\nClick any square to start!\n"
+            md += "\nClick any square to start\n"
         else:
             empty = []
             for i in range(self.size):

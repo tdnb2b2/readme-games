@@ -26,7 +26,6 @@ class GameManager:
             'guess': NumberGuess()
         }
         
-        # Set issue numbers for games
         if 'issue_numbers' in self.data:
             for game_name, game in self.games.items():
                 if game_name in self.data['issue_numbers']:
@@ -57,32 +56,18 @@ class GameManager:
         self.data['players'][self.actor]['total'] += 1
         self.data['players'][self.actor][game_type] += 1
         
-        # Add to participants list if not already there
         if self.actor not in self.data['participants']:
             self.data['participants'].append(self.actor)
     
     def invite_as_read_only_collaborator(self):
-        """
-        Invite player as read-only collaborator.
-        In organizations: 'pull' permission = read-only
-        In personal repos: only 'push' is available (can't do read-only)
-        """
         try:
-            # Check if already a collaborator
             if self.repo.has_in_collaborators(self.actor):
-                return  # Already invited
-            
-            # Try to invite with 'pull' permission (read-only for orgs)
+                return
             self.repo.add_to_collaborators(self.actor, permission='pull')
-            print(f"✅ Invited @{self.actor} as read-only collaborator")
+            print(f"Invited @{self.actor} as read-only collaborator")
         except GithubException as e:
-            # Common errors:
-            # - Already invited (pending)
-            # - User doesn't exist
-            # - Permission error
-            # - Personal repo (doesn't support 'pull' permission)
-            print(f"⚠️ Could not invite @{self.actor}: {e.data.get('message', str(e))}")
-            pass  # Silently continue - invitation is optional
+            print(f"Could not invite @{self.actor}: {e.data.get('message', str(e))}")
+            pass
     
     def get_top_players(self, limit=10):
         return sorted(self.data['players'].items(), key=lambda x: x[1]['total'], reverse=True)[:limit]
@@ -90,22 +75,18 @@ class GameManager:
     def parse_move(self):
         body = self.comment_body.lower().strip()
         
-        # Tic-Tac-Toe: "ttt A1" or just "A1" if in tictactoe issue
         ttt_match = re.search(r'(?:ttt\s+)?([a-c][1-3])', body)
         if ttt_match:
             return 'tictactoe', ttt_match.group(1).upper()
         
-        # Reversi: "reversi D3" or just "D3" if in reversi issue
         rev_match = re.search(r'(?:reversi\s+)?([a-h][1-8])', body)
         if rev_match:
             return 'reversi', rev_match.group(1).upper()
         
-        # Number Guess: "guess 50" or just number
         guess_match = re.search(r'(?:guess\s+)?(\d+)', body)
         if guess_match:
             return 'guess', int(guess_match.group(1))
         
-        # Game start commands
         if 'start' in body:
             if 'ttt' in body or 'tictactoe' in body or 'tic' in body:
                 return 'tictactoe', 'start'
@@ -120,16 +101,13 @@ class GameManager:
         readme = self.repo.get_contents('README.md')
         content = readme.decoded_content.decode('utf-8')
         
-        # Get repo owner and name
         owner, repo_name = self.repo.full_name.split('/')
         
-        # Update game sections
         for game_name, game in self.games.items():
             marker_start = f"<!-- {game_name.upper()}_START -->"
             marker_end = f"<!-- {game_name.upper()}_END -->"
             
             if marker_start in content and marker_end in content:
-                # Pass owner and repo to render method if supported
                 if hasattr(game, 'render') and game_name in ['tictactoe', 'reversi']:
                     game_section = game.render(self.data[game_name], owner=owner, repo=repo_name)
                 else:
@@ -139,7 +117,6 @@ class GameManager:
                 replacement = f"{marker_start}\n{game_section}\n{marker_end}"
                 content = re.sub(pattern, replacement, content, flags=re.DOTALL)
         
-        # Update leaderboard
         leaderboard = self.render_leaderboard()
         lb_start = "<!-- LEADERBOARD_START -->"
         lb_end = "<!-- LEADERBOARD_END -->"
@@ -148,7 +125,6 @@ class GameManager:
             replacement = f"{lb_start}\n{leaderboard}\n{lb_end}"
             content = re.sub(pattern, replacement, content, flags=re.DOTALL)
         
-        # Update participants section
         participants_section = self.render_participants()
         p_start = "<!-- PARTICIPANTS_START -->"
         p_end = "<!-- PARTICIPANTS_END -->"
@@ -162,23 +138,22 @@ class GameManager:
     def render_leaderboard(self):
         top = self.get_top_players()
         if not top:
-            return "*まだプレイヤーがいません。最初のプレイヤーになろう！*"
+            return "*No players yet. Be the first!*"
         
-        md = "| 順位 | プレイヤー | 総ムーブ数 | TTT | Reversi | Guess |\n"
-        md += "|------|------------|-------------|-----|---------|-------|\n"
+        md = "| Rank | Player | Total | TTT | Reversi | Guess |\n"
+        md += "|------|--------|-------|-----|---------|-------|\n"
         for i, (player, stats) in enumerate(top, 1):
-            medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"#{i}"
+            medal = "1st" if i == 1 else "2nd" if i == 2 else "3rd" if i == 3 else f"{i}th"
             md += f"| {medal} | @{player} | {stats['total']} | {stats['tictactoe']} | {stats['reversi']} | {stats['guess']} |\n"
         return md
     
     def render_participants(self):
         if not self.data['participants']:
-            return "*まだ参加者がいません。最初の参加者になろう！*"
+            return "*No participants yet.*"
         
         total = len(self.data['participants'])
-        md = f"**🎮 総参加者数: {total}人**\n\n"
+        md = f"**Total participants: {total}**\n\n"
         
-        # Display participants as badges
         for participant in self.data['participants']:
             moves = self.data['players'].get(participant, {}).get('total', 0)
             md += f"[![@{participant}](https://img.shields.io/badge/@{participant}-{moves}_moves-blue)]" 
@@ -198,7 +173,6 @@ class GameManager:
         if result['success']:
             self.update_player_stats(game_type)
             
-            # Invite as read-only collaborator (first time players only)
             if self.data['players'][self.actor]['total'] == 1:
                 self.invite_as_read_only_collaborator()
             
@@ -208,7 +182,7 @@ class GameManager:
             if result.get('message'):
                 self.issue.create_comment(result['message'])
         else:
-            self.issue.create_comment(f"❌ {result.get('message', 'Invalid move')}")
+            self.issue.create_comment(f"Error: {result.get('message', 'Invalid move')}")
 
 if __name__ == '__main__':
     manager = GameManager()

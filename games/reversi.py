@@ -21,7 +21,7 @@ class Reversi:
             state['board'] = self.create_board()
             state['turn'] = 'black'
             state['moves'] = []
-            return {'success': True, 'message': f'New Reversi game started by @{player}! Black goes first.'}
+            return {'success': True, 'message': f'New Reversi game started by @{player}. Black goes first.'}
 
         if not state['board']:
             state['board'] = self.create_board()
@@ -51,7 +51,7 @@ class Reversi:
         if not self.has_valid_moves(state['board'], next_turn):
             if not self.has_valid_moves(state['board'], state['turn']):
                 winner = self.get_winner(state['board'])
-                msg = f'Game over! {winner} wins! Last move by @{player}'
+                msg = f'Game over! {winner} wins. Last move by @{player}'
                 state['board'] = None
                 return {'success': True, 'message': msg}
 
@@ -103,7 +103,6 @@ class Reversi:
                     if self.get_flips(board, r, c, turn):
                         valid_moves.add(f"{chr(65+c)}{r+1}")
         else:
-            # Initial valid moves for black
             for r in range(self.size):
                 for c in range(self.size):
                     if self.get_flips(board, r, c, 'black'):
@@ -144,7 +143,7 @@ class Reversi:
         md += "|   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** |   |\n"
 
         if not is_active:
-            md += "\nClick any highlighted square to start! (Black goes first)\n"
+            md += "\nClick any highlighted square to start (Black goes first)\n"
         else:
             links = [f"[{p}](https://github.com/{owner}/{repo}/issues/{self.issue_number}/comments/new?body={p})" for p in sorted(valid_moves)]
             md += "\n" + " · ".join(links) + "\n"

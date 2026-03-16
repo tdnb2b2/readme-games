@@ -14,7 +14,7 @@ class NumberGuess:
             state['number'] = random.randint(self.min_num, self.max_num)
             state['attempts'] = []
             state['solved'] = False
-            return {'success': True, 'message': f'New round started by @{player}! Guess a number between {self.min_num} and {self.max_num}.'}
+            return {'success': True, 'message': f'New round started by @{player}. Guess a number between {self.min_num} and {self.max_num}.'}
 
         if state['number'] is None:
             state['number'] = random.randint(self.min_num, self.max_num)
@@ -22,7 +22,7 @@ class NumberGuess:
             state['solved'] = False
 
         if state['solved']:
-            return {'success': False, 'message': 'Already solved! Start a new round with "start guess"'}
+            return {'success': False, 'message': 'Already solved. Start a new round with "start guess"'}
 
         guess = move
         if not isinstance(guess, int) or guess < self.min_num or guess > self.max_num:
@@ -33,19 +33,18 @@ class NumberGuess:
         if guess == state['number']:
             state['solved'] = True
             n = len(state['attempts'])
-            msg = f'Correct! @{player} guessed {state["number"]} in {n} attempt(s)!'
+            msg = f'Correct! @{player} guessed {state["number"]} in {n} attempt(s).'
             state['number'] = None
             return {'success': True, 'message': msg}
         elif guess < state['number']:
-            return {'success': True, 'message': f'{guess} is too low. (#{len(state["attempts"])} by @{player})'}
+            return {'success': True, 'message': f'{guess} is too low (attempt #{len(state["attempts"])} by @{player})'}
         else:
-            return {'success': True, 'message': f'{guess} is too high. (#{len(state["attempts"])} by @{player})'}
+            return {'success': True, 'message': f'{guess} is too high (attempt #{len(state["attempts"])} by @{player})'}
 
     def render(self, state, owner='tdnb2b2', repo='readme-games'):
         is_active = state['number'] is not None and not state.get('solved', False)
         attempts = state.get('attempts', [])
 
-        # Calculate current range
         lo, hi = self.min_num, self.max_num
         if is_active and attempts:
             for a in attempts:
@@ -56,11 +55,10 @@ class NumberGuess:
                     hi = min(hi, g - 1)
 
         if is_active:
-            md = f"\n**Guess the secret number** · Range: **{lo} – {hi}** · Attempts: {len(attempts)}\n\n"
+            md = f"\n**Guess the secret number** | Range: **{lo} – {hi}** | Attempts: {len(attempts)}\n\n"
         else:
-            md = "\n**Guess the secret number between 1 and 100.**\n\n"
+            md = "\n**Guess the secret number between 1 and 100**\n\n"
 
-        # Generate suggestion buttons
         if is_active:
             mid = (lo + hi) // 2
             q1 = (lo + mid) // 2
@@ -81,13 +79,13 @@ class NumberGuess:
 
         if not is_active:
             start_url = f"https://github.com/{owner}/{repo}/issues/{self.issue_number}/comments/new?body=start%20guess"
-            md += f"[Start a new round →]({start_url})\n"
+            md += f"[Start a new round]({start_url})\n"
         else:
             if attempts:
                 md += "<details>\n  <summary>Last 5 attempts</summary>\n\n"
                 md += "| # | Guess | Player | Hint |\n| :-: | :---: | :----- | :--- |\n"
                 for i, a in enumerate(attempts[-5:], len(attempts) - min(5, len(attempts)) + 1):
-                    hint = 'too low ↑' if a['guess'] < state['number'] else 'too high ↓'
+                    hint = 'too low' if a['guess'] < state['number'] else 'too high'
                     md += f"| {i} | **{a['guess']}** | [@{a['player']}](https://github.com/{a['player']}) | {hint} |\n"
                 md += "\n</details>\n"
 
