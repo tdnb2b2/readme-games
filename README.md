@@ -21,23 +21,32 @@ Click any square to start!
 ## Reversi / Othello
 
 <!-- REVERSI_START -->
-**Turn:** Black | Black 2 - White 2
+**Turn:** ⚪ | ⚫ 4 – ⚪ 1
 
-<!-- REV_STATE:{"board":[["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","white","black","empty","empty","empty"],["empty","empty","empty","black","white","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"]],"turn":"black","log":[]} -->
+<!-- REV_STATE:{"board":[["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","black","empty","empty","empty","empty"],["empty","empty","empty","black","black","empty","empty","empty"],["empty","empty","empty","black","white","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"]],"turn":"white","log":[{"player":"tadanobutubutu","pos":"D3","color":"black"}]} -->
 
 |   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** |   |
 |---|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-:|
 | **1** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **1** |
 | **2** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **2** |
-| **3** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+D3&body=Just+click+Submit+new+issue) | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **3** |
-| **4** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+C4&body=Just+click+Submit+new+issue) | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26aa.svg" width=36px> | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg" width=36px> | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **4** |
-| **5** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg" width=36px> | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26aa.svg" width=36px> | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+F5&body=Just+click+Submit+new+issue) | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **5** |
-| **6** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+E6&body=Just+click+Submit+new+issue) | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **6** |
+| **3** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+C3&body=Just+click+Submit+new+issue) | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg" width=36px> | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+E3&body=Just+click+Submit+new+issue) | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **3** |
+| **4** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg" width=36px> | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg" width=36px> | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **4** |
+| **5** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+C5&body=Just+click+Submit+new+issue) | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg" width=36px> | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26aa.svg" width=36px> | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **5** |
+| **6** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **6** |
 | **7** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **7** |
 | **8** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **8** |
 |   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** |   |
 
-[C4](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+C4&body=Just+click+Submit+new+issue) · [D3](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+D3&body=Just+click+Submit+new+issue) · [E6](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+E6&body=Just+click+Submit+new+issue) · [F5](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+F5&body=Just+click+Submit+new+issue)
+[C3](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+C3&body=Just+click+Submit+new+issue) · [C5](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+C5&body=Just+click+Submit+new+issue) · [E3](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+E3&body=Just+click+Submit+new+issue)
+
+<details>
+  <summary>Last placements</summary>
+
+| Position | Player |
+| :------: | :----- |
+| `D3` (⚫) | [@tadanobutubutu](https://github.com/tadanobutubutu) |
+
+</details>
 
 <!-- REVERSI_END -->
 
@@ -60,9 +69,11 @@ Click to guess: [25](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 ## Top 10 Players
 
 <!-- LEADERBOARD_START -->
-| Rank | Player | Total | Tic-Tac-Toe | Reversi | Number Guess |
-|:----:|--------|:-----:|:-----------:|:-------:|:------------:|
-| 1st | [@tadanobutubutu](https://github.com/tadanobutubutu) | 107 | 25 | 70 | 12 |
+| Rank | Player | Total | TTT | Reversi | Guess | ❌W | ⭕W | ⚫W | ⚪W |
+|:----:|--------|:-----:|:---:|:-------:|:-----:|:---:|:---:|:---:|:---:|
+| 1st | [@tadanobutubutu](https://github.com/tadanobutubutu) | 108 | 25 | 71 | 12 | 2 | 1 | 1 | 0 |
+
+**Game wins — ❌: 2 ⭕: 1 ⚫: 1 ⚪: 0**
 
 <!-- LEADERBOARD_END -->
 
@@ -72,7 +83,7 @@ Click to guess: [25](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 <!-- PARTICIPANTS_START -->
 **Total participants: 1**
 
-[![@tadanobutubutu](https://img.shields.io/badge/@tadanobutubutu-107_moves-blue)](https://github.com/tadanobutubutu) 
+[![@tadanobutubutu](https://img.shields.io/badge/@tadanobutubutu-108_moves-blue)](https://github.com/tadanobutubutu) 
 <!-- PARTICIPANTS_END -->
 
 </details>
@@ -82,11 +93,11 @@ Click to guess: [25](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 ## Most Played Games
 
 <!-- GAME_STATS_START -->
-**Total moves played: 107**
+**Total moves played: 108**
 
 | Rank | Game | Moves |
 |:----:|------|:-----:|
-| 1st | Reversi / Othello | 70 (65%) `#############-------` |
+| 1st | Reversi / Othello | 71 (66%) `#############-------` |
 | 2nd | Tic-Tac-Toe | 25 (23%) `####----------------` |
 | 3rd | Number Guessing | 12 (11%) `##------------------` |
 
