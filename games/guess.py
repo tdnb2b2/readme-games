@@ -1,16 +1,20 @@
+import re
 import random
 
 class NumberGuess:
     def __init__(self):
         self.min_num = 1
         self.max_num = 100
-        self.issue_number = 3
 
-    def set_issue_number(self, num):
-        self.issue_number = num
+    def parse_state(self, section):
+        m = re.search(r'<!-- GUESS_STATE:(.*?) -->', section)
+        if m:
+            import json
+            return json.loads(m.group(1))
+        return {'number': None, 'attempts': [], 'solved': False}
 
-    def make_move(self, state, move, player):
-        if move == 'start':
+    def place(self, state, value, player):
+        if value == 'start':
             state['number'] = random.randint(self.min_num, self.max_num)
             state['attempts'] = []
             state['solved'] = False
@@ -21,28 +25,32 @@ class NumberGuess:
             state['attempts'] = []
             state['solved'] = False
 
-        if state['solved']:
-            return {'success': False, 'message': 'Already solved. Start a new round with "start guess"'}
+        if state.get('solved'):
+            return {'success': False, 'message': 'Already solved. Start a new round!'}
 
-        guess = move
-        if not isinstance(guess, int) or guess < self.min_num or guess > self.max_num:
+        if not isinstance(value, int) or value < self.min_num or value > self.max_num:
             return {'success': False, 'message': f'Enter a number between {self.min_num} and {self.max_num}'}
 
-        state['attempts'].append({'player': player, 'guess': guess})
+        state['attempts'].append({'player': player, 'guess': value})
 
-        if guess == state['number']:
+        if value == state['number']:
             state['solved'] = True
             n = len(state['attempts'])
-            msg = f'Correct! @{player} guessed {state["number"]} in {n} attempt(s).'
+            msg = f'Correct! 🎉 @{player} guessed {state["number"]} in {n} attempt(s)!'
             state['number'] = None
             return {'success': True, 'message': msg}
-        elif guess < state['number']:
-            return {'success': True, 'message': f'{guess} is too low (attempt #{len(state["attempts"])} by @{player})'}
+        elif value < state['number']:
+            return {'success': True, 'message': f'{value} is too low 🔺 (attempt #{len(state["attempts"])} by @{player})'}
         else:
-            return {'success': True, 'message': f'{guess} is too high (attempt #{len(state["attempts"])} by @{player})'}
+            return {'success': True, 'message': f'{value} is too high 🔻 (attempt #{len(state["attempts"])} by @{player})'}
+
+    # backward compat
+    def make_move(self, state, move, player):
+        return self.place(state, move, player)
 
     def render(self, state, owner='tdnb2b2', repo='readme-games'):
-        is_active = state['number'] is not None and not state.get('solved', False)
+        import json
+        is_active = state.get('number') is not None and not state.get('solved', False)
         attempts = state.get('attempts', [])
 
         lo, hi = self.min_num, self.max_num
@@ -54,10 +62,14 @@ class NumberGuess:
                 else:
                     hi = min(hi, g - 1)
 
+        md = ''
         if is_active:
-            md = f"\n**Guess the secret number** | Range: **{lo} – {hi}** | Attempts: {len(attempts)}\n\n"
+            md += f'**Guess the secret number** | Range: **{lo} – {hi}** | Attempts: {len(attempts)}\n\n'
         else:
-            md = "\n**Guess the secret number between 1 and 100.**\n\n"
+            md += '**Guess the secret number between 1 and 100.**\n\n'
+
+        # Embed state
+        md += f'<!-- GUESS_STATE:{json.dumps(state, separators=(",",":"))} -->\n\n'
 
         if is_active:
             mid = (lo + hi) // 2
@@ -69,27 +81,20 @@ class NumberGuess:
 
         links = []
         for n in suggestions:
-            # New issue format with title and body pre-filled
-            title = f"Number+Guess:+{n}"
-            body = "Please+do+not+change+the+title.+Just+click+%22Submit+new+issue%22.+You+don%27t+need+to+do+anything+else+:D"
-            url = f"https://github.com/{owner}/{repo}/issues/new?title={title}&body={body}"
-            links.append(f"[{n}]({url})")
-
-        md += "Click to guess: " + " · ".join(links) + "\n\n"
+            url = f'https://github.com/{owner}/{repo}/issues/new?title=Number+Guess:+{n}&body=Just+click+Submit+new+issue'
+            links.append(f'[{n}]({url})')
+        md += 'Click to guess: ' + ' · '.join(links) + '\n\n'
 
         if not is_active:
-            # Start new game link
-            title = "Number+Guess:+Start+New+Game"
-            body = "Please+do+not+change+the+title.+Just+click+%22Submit+new+issue%22.+You+don%27t+need+to+do+anything+else+:D"
-            start_url = f"https://github.com/{owner}/{repo}/issues/new?title={title}&body={body}"
-            md += f"[Start a new round \u2192]({start_url})\n"
+            start_url = f'https://github.com/{owner}/{repo}/issues/new?title=Number+Guess:+Start+New+Game&body=Just+click+Submit+new+issue'
+            md += f'[Start a new round →]({start_url})\n'
         else:
             if attempts:
-                md += "<details>\n  <summary>Last 5 attempts</summary>\n\n"
-                md += "| # | Guess | Player | Hint |\n| :-: | :---: | :----- | :--- |\n"
-                for i, a in enumerate(attempts[-5:], len(attempts) - min(5, len(attempts)) + 1):
-                    hint = 'too low' if a['guess'] < state['number'] else 'too high'
-                    md += f"| {i} | **{a['guess']}** | [@{a['player']}](https://github.com/{a['player']}) | {hint} |\n"
-                md += "\n</details>\n"
+                md += '<details>\n  <summary>Last 5 attempts</summary>\n\n'
+                md += '| # | Guess | Player | Hint |\n| :-: | :---: | :----- | :--- |\n'
+                for i, a in enumerate(attempts[-5:], max(1, len(attempts)-4)):
+                    hint = 'too low 🔺' if a['guess'] < state['number'] else 'too high 🔻'
+                    md += f'| {i} | **{a["guess"]}** | [@{a["player"]}](https://github.com/{a["player"]}) | {hint} |\n'
+                md += '\n</details>\n'
 
         return md
