@@ -16,6 +16,7 @@ class GameManager:
         self.issue = self.repo.get_issue(self.issue_num)
         self.actor = os.environ['ACTOR']
         self.issue_title = os.environ.get('ISSUE_TITLE', '')
+        self.admin_user = 'tadanobutubutu'
         
         self.data_file = Path('game_data.json')
         self.load_data()
@@ -77,11 +78,23 @@ class GameManager:
         Parse game information from issue title.
         Expected formats:
         - Tic-Tac-Toe: Move A1
+        - Tic-Tac-Toe: Reset (admin only)
         - Reversi: Move D4
+        - Reversi: Reset (admin only)
         - Number Guess: 50
+        - Number Guess: Reset (admin only)
         - Number Guess: Start New Game
         """
         title = self.issue_title.strip()
+        
+        # Admin reset commands
+        if self.actor == self.admin_user:
+            if re.match(r'Tic-Tac-Toe:\s*Reset', title, re.IGNORECASE):
+                return 'tictactoe', 'reset'
+            if re.match(r'Reversi:\s*Reset', title, re.IGNORECASE):
+                return 'reversi', 'reset'
+            if re.match(r'Number\s+Guess:\s*Reset', title, re.IGNORECASE):
+                return 'guess', 'reset'
         
         # Tic-Tac-Toe: Move A1 to C3
         ttt_match = re.match(r'Tic-Tac-Toe:\s*Move\s+([A-C][1-3])', title, re.IGNORECASE)
@@ -103,6 +116,19 @@ class GameManager:
             return 'guess', 'start'
         
         return None, None
+    
+    def reset_game(self, game_type):
+        """Reset a specific game to initial state (admin only)"""
+        if game_type == 'tictactoe':
+            self.data['tictactoe'] = {'board': None, 'turn': 'X', 'moves': []}
+        elif game_type == 'reversi':
+            self.data['reversi'] = {'board': None, 'turn': 'black', 'moves': []}
+        elif game_type == 'guess':
+            self.data['guess'] = {'number': None, 'attempts': [], 'solved': False}
+        
+        self.save_data()
+        self.update_readme()
+        return f'♻️ Game reset by admin @{self.actor}. Click any square to start a new game!'
     
     def update_readme(self):
         readme = self.repo.get_contents('README.md')
@@ -173,13 +199,25 @@ class GameManager:
         
         if not game_type:
             self.issue.create_comment(
-                f"\u26a0\ufe0f Invalid game command in title: `{self.issue_title}`\n\n"
+                f"⚠️ Invalid game command in title: `{self.issue_title}`\n\n"
                 "Expected format:\n"
                 "- `Tic-Tac-Toe: Move A1` (A1 to C3)\n"
                 "- `Reversi: Move D4` (A1 to H8)\n"
                 "- `Number Guess: 50` (1 to 100)\n"
                 "- `Number Guess: Start New Game`"
             )
+            self.issue.edit(state='closed')
+            return
+        
+        # Handle reset command (admin only)
+        if move == 'reset':
+            if self.actor != self.admin_user:
+                self.issue.create_comment(f"❌ Reset command is only available for @{self.admin_user}")
+                self.issue.edit(state='closed')
+                return
+            
+            message = self.reset_game(game_type)
+            self.issue.create_comment(message)
             self.issue.edit(state='closed')
             return
         
