@@ -1,25 +1,48 @@
 # README Games
 
-## Tic-Tac-Toe
+## ❌⭕ Tic-Tac-Toe
 
 <!-- TICTACTOE_START -->
-*No active game.* [**Start Game →**](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt)
+|   | **A** | **B** | **C** |   |
+|---|:-----:|:-----:|:-----:|:-:|
+| **1** | [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt) | [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt) | [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt) | **1** |
+| **2** | [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt) | [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt) | [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt) | **2** |
+| **3** | [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt) | [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt) | [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/1/comments/new?body=start%20ttt) | **3** |
+|   | **A** | **B** | **C** |   |
+
+Click any square to start!
 <!-- TICTACTOE_END -->
 
 ---
 
-## Reversi / Othello
+## ⚫⚪ Reversi / Othello
 
 <!-- REVERSI_START -->
-*No active game.* [**Start Game →**](https://github.com/tdnb2b2/readme-games/issues/2/comments/new?body=start%20reversi)
+|   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** |   |
+|---|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-:|
+| **1** | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | **1** |
+| **2** | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | **2** |
+| **3** | &nbsp; | &nbsp; | &nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/2/comments/new?body=start%20reversi) | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/2/comments/new?body=start%20reversi) | &nbsp; | &nbsp; | &nbsp; | **3** |
+| **4** | &nbsp; | &nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/2/comments/new?body=start%20reversi) | ⚪ | ⚫ | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/2/comments/new?body=start%20reversi) | &nbsp; | &nbsp; | **4** |
+| **5** | &nbsp; | &nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/2/comments/new?body=start%20reversi) | ⚫ | ⚪ | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/2/comments/new?body=start%20reversi) | &nbsp; | &nbsp; | **5** |
+| **6** | &nbsp; | &nbsp; | &nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/2/comments/new?body=start%20reversi) | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/2/comments/new?body=start%20reversi) | &nbsp; | &nbsp; | &nbsp; | **6** |
+| **7** | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | **7** |
+| **8** | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | &nbsp; | **8** |
+|   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** |   |
+
+Click any highlighted square to start! (Black goes first)
 <!-- REVERSI_END -->
 
 ---
 
-## Number Guessing (1-100)
+## 🔢 Number Guessing (1-100)
 
 <!-- GUESS_START -->
-*No active game.* [**Start Game →**](https://github.com/tdnb2b2/readme-games/issues/3/comments/new?body=start%20guess)
+**Guess the secret number between 1 and 100.**
+
+Click to guess: [25](https://github.com/tdnb2b2/readme-games/issues/3/comments/new?body=start%20guess) · [50](https://github.com/tdnb2b2/readme-games/issues/3/comments/new?body=start%20guess) · [75](https://github.com/tdnb2b2/readme-games/issues/3/comments/new?body=start%20guess)
+
+[Start a new round →](https://github.com/tdnb2b2/readme-games/issues/3/comments/new?body=start%20guess)
 <!-- GUESS_END -->
 
 ---
@@ -27,14 +50,14 @@
 ## Top 10 Players
 
 <!-- LEADERBOARD_START -->
-*まだプレイヤーがいません。最初のプレイヤーになろう！*
+*No players yet. Be the first!*
 <!-- LEADERBOARD_END -->
 
 <details>
   <summary>All Participants</summary>
 
 <!-- PARTICIPANTS_START -->
-*まだ参加者がいません。最初の参加者になろう！*
+*No participants yet.*
 <!-- PARTICIPANTS_END -->
 
 </details>
@@ -44,29 +67,13 @@
 <details>
   <summary>How it works</summary>
 
-### Game System
+Click a square on the board. GitHub Actions processes your move and updates this README in ~15 seconds.
 
-1. **Click a square** on the game board
-2. **GitHub Actions** processes your move automatically
-3. **README updates** instantly with new game state
-4. **You're added** to leaderboard & participants
-5. **Invited as collaborator** (read-only, appears in your profile)
-
-### Technical Stack
-
-- **Trigger**: Issue comments
-- **Engine**: Python + PyGithub
-- **Storage**: Single JSON file
-- **Response**: 10-15 seconds
-- **Mobile**: Works in GitHub app
-
-### Commands
-
-| Game | Start | Move Format |
-|------|-------|-------------|
-| Tic-Tac-Toe | `start ttt` | `A1`, `B2`, `C3` |
-| Reversi | `start reversi` | `D3`, `E6`, `F5` |
-| Number Guess | `start guess` | `50`, `75`, `42` |
+| Game | Start | Move |
+|------|-------|------|
+| Tic-Tac-Toe | `start ttt` | `A1` – `C3` |
+| Reversi | `start reversi` | `A1` – `H8` |
+| Number Guess | `start guess` | `1` – `100` |
 
 </details>
 
