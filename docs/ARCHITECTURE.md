@@ -1,4 +1,4 @@
-# 🏛️ Architecture Overview
+# Architecture Overview
 
 ## System Design
 
@@ -262,16 +262,16 @@ except GithubException:
 ### Current Design Choice
 
 **Optimized for:**
-- ✅ Simplicity
-- ✅ Reliability
-- ✅ Zero cost
-- ✅ Easy to fork
-- ✅ No maintenance
+- Simplicity
+- Reliability
+- Zero cost
+- Easy to fork
+- No maintenance
 
 **Not optimized for:**
-- ❌ Thousands of concurrent users
-- ❌ Sub-second response times
-- ❌ Real-time multiplayer
+- Thousands of concurrent users
+- Sub-second response times
+- Real-time multiplayer
 
 ## Error Handling
 
@@ -297,9 +297,9 @@ return {
 ```
 
 **Result posted as issue comment:**
-- ✅ Success messages
-- ❌ Error messages
-- 🎉 Game over notifications
+- Success messages
+- Error messages
+- Game over notifications
 
 ## Extensibility
 
@@ -376,4 +376,4 @@ python game.py
 
 ---
 
-**Architecture designed for simplicity, speed, and fun!** ⚡
+**Architecture designed for simplicity, speed, and fun!**

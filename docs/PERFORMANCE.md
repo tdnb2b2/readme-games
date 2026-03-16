@@ -1,4 +1,4 @@
-# ⚡ Performance Optimization Guide
+# Performance Optimization Guide
 
 ## Current Performance
 
@@ -57,16 +57,16 @@ Total: ~10 seconds
 
 ### What's Already Fast?
 
-✅ **Game logic (<100ms)**
+**Game logic (<100ms)**
 - Tic-Tac-Toe: O(1) move, O(9) win check
 - Reversi: O(8*8) move validation
 - Number Guess: O(1) comparison
 
-✅ **JSON I/O (<1ms)**
+**JSON I/O (<1ms)**
 - File size: <10KB
 - Parse time: negligible
 
-✅ **Regex parsing (<1ms)**
+**Regex parsing (<1ms)**
 - Pattern matching: instant
 
 ## Optimization Techniques Applied
@@ -100,11 +100,11 @@ Time: 1-2s on cache hit (90% of runs)
 - PyGithub: 2.1.1 (only library)
 
 **We don't use:**
-- ❌ Flask/Django (web framework)
-- ❌ SQLAlchemy (ORM)
-- ❌ NumPy (scientific computing)
-- ❌ Pandas (data analysis)
-- ❌ Requests (PyGithub includes it)
+- Flask/Django (web framework)
+- SQLAlchemy (ORM)
+- NumPy (scientific computing)
+- Pandas (data analysis)
+- Requests (PyGithub includes it)
 
 **Benefit:** Faster install, smaller cache, less code to load
 
@@ -330,29 +330,29 @@ Total: 2.37s
 ## Benchmark Goals
 
 ### Current
-✅ Total workflow: <30s
-✅ Game logic: <100ms
-✅ JSON I/O: <1ms
-✅ Parsing: <1ms
+Total workflow: <30s
+Game logic: <100ms
+JSON I/O: <1ms
+Parsing: <1ms
 
 ### Stretch Goals
-🎯 Total workflow: <10s
-🎯 API operations: <500ms
-🎯 Cold start: <15s
+Total workflow: <10s
+API operations: <500ms
+Cold start: <15s
 
 ## Conclusion
 
 **Current performance is excellent for a GitHub Actions-based game!**
 
 **Key optimizations:**
-1. ✅ Pip caching enabled
-2. ✅ Minimal dependencies
-3. ✅ JSON state storage
-4. ✅ Efficient parsing
-5. ✅ Direct API calls
+1. Pip caching enabled
+2. Minimal dependencies
+3. JSON state storage
+4. Efficient parsing
+5. Direct API calls
 
 **Future improvements available** if needed, but current design prioritizes simplicity and reliability over sub-second response times.
 
 ---
 
-**Remember: Fast enough is fast enough!** 🚀
+**Remember: Fast enough is fast enough!**
