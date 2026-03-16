@@ -78,26 +78,20 @@ class GameManager:
         
         # Admin reset commands
         if self.actor == self.admin_user:
-            # OX / Tic-Tac-Toe reset
-            # matches: リセット ox, リセット　ox, リセット oxゲーム, リセット まるばつ, リセット ○×, リセット tictactoe
             if re.search(r'リセット\s*(ox|oxゲーム|まるばつ|○×|tictactoe|tic)', title, re.IGNORECASE):
                 return 'tictactoe', 'reset'
-            # Reversi / Othello reset
-            # matches: リセット オセロ, リセット オセロゲーム, リセット reversi, リセット リバーシ
             if re.search(r'リセット\s*(オセロ|オセロゲーム|reversi|リバーシ)', title, re.IGNORECASE):
                 return 'reversi', 'reset'
-            # Number guess reset
-            # matches: リセット 数当て, リセット guess, リセット ゲス, リセット 数当
             if re.search(r'リセット\s*(数当て?|数当|guess|ゲス)', title, re.IGNORECASE):
                 return 'guess', 'reset'
         
-        # Tic-Tac-Toe: Move A1 to C3
-        ttt_match = re.match(r'Tic-Tac-Toe:\s*Move\s+([A-C][1-3])', title, re.IGNORECASE)
+        # Tic-Tac-Toe: Put A1 to C3 (also accept Move for backwards compat)
+        ttt_match = re.match(r'Tic-Tac-Toe:\s*(?:Put|Move)\s+([A-C][1-3])', title, re.IGNORECASE)
         if ttt_match:
             return 'tictactoe', ttt_match.group(1).upper()
         
-        # Reversi: Move A1 to H8
-        rev_match = re.match(r'Reversi:\s*Move\s+([A-H][1-8])', title, re.IGNORECASE)
+        # Reversi: Put A1 to H8 (also accept Move for backwards compat)
+        rev_match = re.match(r'Reversi:\s*(?:Put|Move)\s+([A-H][1-8])', title, re.IGNORECASE)
         if rev_match:
             return 'reversi', rev_match.group(1).upper()
         
@@ -113,7 +107,6 @@ class GameManager:
         return None, None
     
     def reset_game(self, game_type):
-        """Reset a specific game to initial state (admin only)"""
         if game_type == 'tictactoe':
             self.data['tictactoe'] = {'board': None, 'turn': 'X', 'moves': []}
         elif game_type == 'reversi':
@@ -161,7 +154,7 @@ class GameManager:
             replacement = f"{p_start}\n{participants_section}\n{p_end}"
             content = re.sub(pattern, replacement, content, flags=re.DOTALL)
         
-        self.repo.update_file('README.md', f'Update README after move by @{self.actor}', content, readme.sha, branch='main')
+        self.repo.update_file('README.md', f'Update README after placement by @{self.actor}', content, readme.sha, branch='main')
     
     def render_leaderboard(self):
         top = self.get_top_players()
@@ -183,8 +176,8 @@ class GameManager:
         md = f"**Total participants: {total}**\n\n"
         
         for participant in self.data['participants']:
-            moves = self.data['players'].get(participant, {}).get('total', 0)
-            md += f"[![@{participant}](https://img.shields.io/badge/@{participant}-{moves}_moves-blue)]" 
+            count = self.data['players'].get(participant, {}).get('total', 0)
+            md += f"[![@{participant}](https://img.shields.io/badge/@{participant}-{count}_placements-blue)]"
             md += f"(https://github.com/{participant}) "
         
         return md
@@ -196,21 +189,19 @@ class GameManager:
             self.issue.create_comment(
                 f"⚠️ Invalid game command in title: `{self.issue_title}`\n\n"
                 "Expected format:\n"
-                "- `Tic-Tac-Toe: Move A1` (A1 to C3)\n"
-                "- `Reversi: Move D4` (A1 to H8)\n"
+                "- `Tic-Tac-Toe: Put A1` (A1 to C3)\n"
+                "- `Reversi: Put D4` (A1 to H8)\n"
                 "- `Number Guess: 50` (1 to 100)\n"
                 "- `Number Guess: Start New Game`"
             )
             self.issue.edit(state='closed')
             return
         
-        # Handle reset command (admin only)
         if move == 'reset':
             if self.actor != self.admin_user:
                 self.issue.create_comment(f"❌ Reset command is only available for @{self.admin_user}")
                 self.issue.edit(state='closed')
                 return
-            
             message = self.reset_game(game_type)
             self.issue.create_comment(message)
             self.issue.edit(state='closed')
@@ -221,19 +212,15 @@ class GameManager:
         
         if result['success']:
             self.update_player_stats(game_type)
-            
             if self.data['players'][self.actor]['total'] == 1:
                 self.invite_as_read_only_collaborator()
-            
             self.save_data()
             self.update_readme()
-            
             if result.get('message'):
                 self.issue.create_comment(result['message'])
-            
             self.issue.edit(state='closed')
         else:
-            self.issue.create_comment(f"❌ Error: {result.get('message', 'Invalid move')}")
+            self.issue.create_comment(f"❌ Error: {result.get('message', 'Invalid placement')}")
             self.issue.edit(state='closed')
 
 if __name__ == '__main__':
