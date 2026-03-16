@@ -1,4 +1,5 @@
 import re
+import json
 import random
 
 class NumberGuess:
@@ -9,8 +10,10 @@ class NumberGuess:
     def parse_state(self, section):
         m = re.search(r'<!-- GUESS_STATE:(.*?) -->', section)
         if m:
-            import json
-            return json.loads(m.group(1))
+            try:
+                return json.loads(m.group(1))
+            except Exception:
+                pass
         return {'number': None, 'attempts': [], 'solved': False}
 
     def place(self, state, value, player):
@@ -18,15 +21,15 @@ class NumberGuess:
             state['number'] = random.randint(self.min_num, self.max_num)
             state['attempts'] = []
             state['solved'] = False
-            return {'success': True, 'message': f'New round started by @{player}. Guess a number between {self.min_num} and {self.max_num}.'}
+            return {'success': True, 'message': f'New round started by @{player}! Guess a number between {self.min_num} and {self.max_num}.'}
 
-        if state['number'] is None:
+        if state.get('number') is None:
             state['number'] = random.randint(self.min_num, self.max_num)
             state['attempts'] = []
             state['solved'] = False
 
         if state.get('solved'):
-            return {'success': False, 'message': 'Already solved. Start a new round!'}
+            return {'success': False, 'message': 'Already solved! Start a new round.'}
 
         if not isinstance(value, int) or value < self.min_num or value > self.max_num:
             return {'success': False, 'message': f'Enter a number between {self.min_num} and {self.max_num}'}
@@ -36,7 +39,7 @@ class NumberGuess:
         if value == state['number']:
             state['solved'] = True
             n = len(state['attempts'])
-            msg = f'Correct! 🎉 @{player} guessed {state["number"]} in {n} attempt(s)!'
+            msg = f'🎉 Correct! @{player} guessed {state["number"]} in {n} attempt(s)!'
             state['number'] = None
             return {'success': True, 'message': msg}
         elif value < state['number']:
@@ -44,12 +47,7 @@ class NumberGuess:
         else:
             return {'success': True, 'message': f'{value} is too high 🔻 (attempt #{len(state["attempts"])} by @{player})'}
 
-    # backward compat
-    def make_move(self, state, move, player):
-        return self.place(state, move, player)
-
     def render(self, state, owner='tdnb2b2', repo='readme-games'):
-        import json
         is_active = state.get('number') is not None and not state.get('solved', False)
         attempts = state.get('attempts', [])
 
@@ -68,7 +66,6 @@ class NumberGuess:
         else:
             md += '**Guess the secret number between 1 and 100.**\n\n'
 
-        # Embed state
         md += f'<!-- GUESS_STATE:{json.dumps(state, separators=(",",":"))} -->\n\n'
 
         if is_active:
@@ -92,7 +89,7 @@ class NumberGuess:
             if attempts:
                 md += '<details>\n  <summary>Last 5 attempts</summary>\n\n'
                 md += '| # | Guess | Player | Hint |\n| :-: | :---: | :----- | :--- |\n'
-                for i, a in enumerate(attempts[-5:], max(1, len(attempts)-4)):
+                for i, a in enumerate(attempts[-5:], max(1, len(attempts) - 4)):
                     hint = 'too low 🔺' if a['guess'] < state['number'] else 'too high 🔻'
                     md += f'| {i} | **{a["guess"]}** | [@{a["player"]}](https://github.com/{a["player"]}) | {hint} |\n'
                 md += '\n</details>\n'

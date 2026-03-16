@@ -1,17 +1,19 @@
 import re
+import json
 
 class Reversi:
-    EMPTY = None
+    # Use string constants to avoid JSON null issues
     BLACK = 'black'
     WHITE = 'white'
+    EMPTY = 'empty'
 
     IMG_BLACK = 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg'
     IMG_WHITE = 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26aa.svg'
-    SYM = {BLACK: '⚫', WHITE: '⚪', None: '&nbsp;&nbsp;&nbsp;'}
+    SYM = {'black': '⚫', 'white': '⚪', 'empty': '&nbsp;&nbsp;&nbsp;'}
     DIRS = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
 
     def _empty_board(self):
-        board = [[None]*8 for _ in range(8)]
+        board = [[self.EMPTY] * 8 for _ in range(8)]
         board[3][3] = board[4][4] = self.WHITE
         board[3][4] = board[4][3] = self.BLACK
         return board
@@ -19,8 +21,10 @@ class Reversi:
     def parse_state(self, section):
         m = re.search(r'<!-- REV_STATE:(.*?) -->', section)
         if m:
-            import json
-            return json.loads(m.group(1))
+            try:
+                return json.loads(m.group(1))
+            except Exception:
+                pass
         return {'board': self._empty_board(), 'turn': self.BLACK, 'log': []}
 
     def place(self, state, position, player):
@@ -54,20 +58,20 @@ class Reversi:
                 state['log'] = []
                 return {'success': True, 'game_over': True,
                         'message': f'Game over! {winner} wins. Last piece placed by @{player}'}
-            next_turn = turn  # skip
+            next_turn = turn  # skip opponent turn
 
         state['turn'] = next_turn
         return {'success': True, 'game_over': False,
                 'message': f'{self.SYM[turn]} placed at {position.upper()} by @{player}. Flipped {len(flips)}. Next: {self.SYM[next_turn]}'}
 
     def _get_flips(self, board, row, col, color):
-        if board[row][col] is not None:
+        if board[row][col] != self.EMPTY:
             return []
         opp = self.WHITE if color == self.BLACK else self.BLACK
         flips = []
         for dr, dc in self.DIRS:
             tmp = []
-            r, c = row+dr, col+dc
+            r, c = row + dr, col + dc
             while 0 <= r < 8 and 0 <= c < 8:
                 if board[r][c] == opp:
                     tmp.append((r, c))
@@ -76,7 +80,7 @@ class Reversi:
                     break
                 else:
                     break
-                r, c = r+dr, c+dc
+                r, c = r + dr, c + dc
         return flips
 
     def _has_valid(self, board, color):
@@ -91,7 +95,6 @@ class Reversi:
         return 'Draw'
 
     def render(self, state, owner='tdnb2b2', repo='readme-games'):
-        import json
         board = state['board']
         turn = state['turn']
 
@@ -120,9 +123,9 @@ class Reversi:
                     md += f'<img src="{self.IMG_WHITE}" width=36px>'
                 elif pos in valid:
                     url = f'https://github.com/{owner}/{repo}/issues/new?title=Reversi:+Put+{pos}&body=Just+click+Submit+new+issue'
-                    md += f'[{self.SYM[None]}]({url})'
+                    md += f'[{self.SYM[self.EMPTY]}]({url})'
                 else:
-                    md += self.SYM[None]
+                    md += self.SYM[self.EMPTY]
                 md += ' | '
             md += f'**{r+1}** |\n'
         md += '|   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** |   |\n'

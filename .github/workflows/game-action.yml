@@ -12,31 +12,36 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-        ref: main
+      - uses: actions/checkout@v3
+        with:
+          ref: main
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        cache: 'pip'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
 
-    - name: Install dependencies
-      run: pip install --no-cache-dir -r requirements.txt
+      - name: Install dependencies
+        run: pip install --no-cache-dir -r requirements.txt
 
-    - name: Execute game
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ISSUE_NUMBER: ${{ github.event.issue.number }}
-        ISSUE_TITLE: ${{ github.event.issue.title }}
-        ACTOR: ${{ github.event.issue.user.login }}
-        REPO: ${{ github.repository }}
-      run: python game.py
+      - name: Run game
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ACTOR: ${{ github.event.issue.user.login }}
+          REPO: ${{ github.repository }}
+        run: python game.py
 
-    - name: Save stats
-      run: |
-        git config user.email "action@github.com"
-        git config user.name "Game Bot"
-        git add game_stats.json || true
-        git diff --staged --quiet || git commit -m "📊 Update stats by @${{ github.event.issue.user.login }}" && git push origin main || true
+      - name: Commit stats
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "Game Bot"
+          git add game_stats.json
+          if git diff --staged --quiet; then
+            echo "No stats changes"
+          else
+            git commit -m "📊 Update stats"
+            git push origin main
+          fi

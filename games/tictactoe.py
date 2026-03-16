@@ -1,26 +1,26 @@
 import re
+import json
 
 class TicTacToe:
-    EMPTY = 'EMPTY'
     X = 'X'
     O = 'O'
+    EMPTY = 'EMPTY'
 
     IMG_X = 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/274c.svg'
     IMG_O = 'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/2b55.svg'
-    SYM = {X: '❌', O: '⭕', EMPTY: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}
+    SYM = {'X': '❌', 'O': '⭕', 'EMPTY': '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'}
 
-    # Parse board state from README hidden comment
-    # State format stored as hidden comment inside TICTACTOE markers:
-    # <!-- STATE:{"board":[[...]]},{"turn":"X"} -->
+    def _empty_board(self):
+        return [['EMPTY'] * 3 for _ in range(3)]
+
     def parse_state(self, section):
         m = re.search(r'<!-- TTT_STATE:(.*?) -->', section)
         if m:
-            import json
-            return json.loads(m.group(1))
+            try:
+                return json.loads(m.group(1))
+            except Exception:
+                pass
         return {'board': self._empty_board(), 'turn': self.X, 'log': []}
-
-    def _empty_board(self):
-        return [[self.EMPTY]*3 for _ in range(3)]
 
     def place(self, state, position, player):
         board = state['board']
@@ -38,7 +38,7 @@ class TicTacToe:
         board[row][col] = turn
         log = state.get('log', [])
         log.append({'player': player, 'pos': position.upper(), 'sym': turn})
-        state['log'] = log[-10:]  # keep last 10
+        state['log'] = log[-10:]
 
         winner = self._check_winner(board)
         if winner:
@@ -72,18 +72,14 @@ class TicTacToe:
         return None
 
     def render(self, state, owner='tdnb2b2', repo='readme-games'):
-        import json
         board = state['board']
         turn = state['turn']
-
-        # Check if any piece is on the board
         has_pieces = any(board[r][c] != self.EMPTY for r in range(3) for c in range(3))
 
         md = ''
         if has_pieces:
             md += f'**Turn:** {self.SYM[turn]}\n\n'
 
-        # Embed state as hidden comment (single source of truth)
         md += f'<!-- TTT_STATE:{json.dumps(state, separators=(",",":"))} -->\n\n'
 
         md += '|   | **A** | **B** | **C** |   |\n'
