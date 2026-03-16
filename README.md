@@ -46,21 +46,13 @@ Click any square to start!
 ## Number Guessing (1-100)
 
 <!-- GUESS_START -->
-**Guess the secret number** | Range: **51 – 74** | Attempts: 2
+**Guess the secret number between 1 and 100.**
 
-<!-- GUESS_STATE:{"number":66,"attempts":[{"player":"tadanobutubutu","guess":50},{"player":"tadanobutubutu","guess":75}],"solved":false} -->
+<!-- GUESS_STATE:{"number":null,"attempts":[{"player":"tadanobutubutu","guess":50},{"player":"tadanobutubutu","guess":75},{"player":"tadanobutubutu","guess":66}],"solved":true} -->
 
-Click to guess: [56](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+56&body=Just+click+Submit+new+issue) · [62](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+62&body=Just+click+Submit+new+issue) · [68](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+68&body=Just+click+Submit+new+issue)
+Click to guess: [25](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+25&body=Just+click+Submit+new+issue) · [50](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+50&body=Just+click+Submit+new+issue) · [75](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+75&body=Just+click+Submit+new+issue)
 
-<details>
-  <summary>Last 5 attempts</summary>
-
-| # | Guess | Player | Hint |
-| :-: | :---: | :----- | :--- |
-| 1 | **50** | [@tadanobutubutu](https://github.com/tadanobutubutu) | Higher 🔺 |
-| 2 | **75** | [@tadanobutubutu](https://github.com/tadanobutubutu) | Close 🔻 |
-
-</details>
+[Start a new round →](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+Start+New+Game&body=Just+click+Submit+new+issue)
 
 <!-- GUESS_END -->
 
@@ -71,7 +63,7 @@ Click to guess: [56](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 <!-- LEADERBOARD_START -->
 | Rank | Player | Total | Tic-Tac-Toe | Reversi | Number Guess |
 |:----:|--------|:-----:|:-----------:|:-------:|:------------:|
-| 1st | [@tadanobutubutu](https://github.com/tadanobutubutu) | 2 | 0 | 0 | 2 |
+| 1st | [@tadanobutubutu](https://github.com/tadanobutubutu) | 3 | 0 | 0 | 3 |
 
 <!-- LEADERBOARD_END -->
 
@@ -81,7 +73,7 @@ Click to guess: [56](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 <!-- PARTICIPANTS_START -->
 **Total participants: 1**
 
-[![@tadanobutubutu](https://img.shields.io/badge/@tadanobutubutu-2_moves-blue)](https://github.com/tadanobutubutu) 
+[![@tadanobutubutu](https://img.shields.io/badge/@tadanobutubutu-3_moves-blue)](https://github.com/tadanobutubutu) 
 <!-- PARTICIPANTS_END -->
 
 </details>
@@ -91,11 +83,11 @@ Click to guess: [56](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 ## Most Played Games
 
 <!-- GAME_STATS_START -->
-**Total moves played: 2**
+**Total moves played: 3**
 
 | Rank | Game | Moves |
 |:----:|------|:-----:|
-| 1st | Number Guessing | 2 (100%) `####################` |
+| 1st | Number Guessing | 3 (100%) `####################` |
 | 2nd | Tic-Tac-Toe | 0 (0%) `--------------------` |
 | 3rd | Reversi / Othello | 0 (0%) `--------------------` |
 
