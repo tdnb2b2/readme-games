@@ -42,7 +42,10 @@ jobs:
           if git diff --staged --quiet; then
             echo "No stats changes"
           else
+            git stash
             git pull --rebase origin main
+            git stash pop
+            git add game_stats.json
             git commit -m "Update stats"
             git push origin main
           fi
