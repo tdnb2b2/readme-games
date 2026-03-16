@@ -1,5 +1,28 @@
 # README Games
 
+<!--
+AI_INSTRUCTIONS:
+=== テストプレイのルール ===
+1. 必ず get_file_contents で README.md を取得してから手を打つ
+2. issue の title はリンクの title 属性そのままをコピーする（改変禁止）
+3. issue の body は常に「Just click Submit new issue」固定
+4. issue 発行後、get_comments でコメントが返るまでポーリングして結果を確認する
+5. 結果確認後、README.md を再取得して盤面・ランキングを検証する
+6. 有効手リスト（テキストリンク行）に載っていないマスは絶対に打たない
+
+=== 管理者限定リセットコマンド（issue title に書いてそのまま submit） ===
+- Tic-Tac-Toe リセット : reset ox  / reset tictactoe / reset tic
+- Reversi リセット     : reset reversi / reset othello
+- 数字当てリセット     : reset guess
+※ リセットコマンドは tadanobutubutu アカウントのみ有効
+
+=== ランキング更新タイミング ===
+- 毎手ごとに自動更新される（手動操作不要）
+- 勝利記録は issue コメントの以下パターンから検出：
+  TTT: "❌ wins!" / "⭕ wins!"
+  Reversi: "Game over! ⚫ Black wins" / "Game over! ⚪ White wins"
+-->
+
 ## Tic-Tac-Toe
 
 <!-- TICTACTOE_START -->
