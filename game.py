@@ -30,6 +30,7 @@ class GameManager:
         self.issue_title = os.environ.get('ISSUE_TITLE', '').strip()
         self.admin_user  = 'tadanobutubutu'
         self.owner, self.repo_name = self.repo_full.split('/')
+        self._current_result_message = ''
 
         # PyGithub は REST 操作のみに使用
         from github import Github
@@ -112,6 +113,15 @@ class GameManager:
             if REV_WIN_W.search(body):  return 'rev_white'
         return None
 
+    @staticmethod
+    def _detect_win_from_message(message):
+        """result['message'] 文字列から直接勝利キーを返す"""
+        if TTT_WIN_X.search(message):  return 'ttt_x'
+        if TTT_WIN_O.search(message):  return 'ttt_o'
+        if REV_WIN_B.search(message):  return 'rev_black'
+        if REV_WIN_W.search(message):  return 'rev_white'
+        return None
+
     # ------------------------------------------------------------------ #
     #  集計（GraphQL データから）                                        #
     # ------------------------------------------------------------------ #
@@ -172,8 +182,9 @@ class GameManager:
                     players[login][key_map[win]] += 1
 
         # 現在 issue の勝利も先行反映（include_current時）
-        if include_current:
-            win = self._detect_win_from_current_result()
+        # result['message'] を使って直接判定する
+        if include_current and self._current_result_message:
+            win = self._detect_win_from_message(self._current_result_message)
             if win:
                 wins[win] += 1
                 key_map = {
@@ -189,10 +200,6 @@ class GameManager:
                               key=lambda p: players[p]['total'], reverse=True)
         return {'players': players, 'participants': participants,
                 'games': games, 'wins': wins}
-
-    def _detect_win_from_current_result(self):
-        """game.py 内で現在 issue の検出は result で判定するのでここは常に None"""
-        return None
 
     # ------------------------------------------------------------------ #
     #  レンダリング                                                         #
@@ -210,7 +217,7 @@ class GameManager:
                    f'| {s["total"]} | {s["tictactoe"]} | {s["reversi"]} | {s["guess"]} '
                    f'| {s["ttt_wins_x"]} | {s["ttt_wins_o"]} '
                    f'| {s["rev_wins_black"]} | {s["rev_wins_white"]} |\n')
-        # 右下に割れ总勝利数
+        # 右下に総勝利数
         w = stats['wins']
         md += f'\n**Game wins — ❌: {w["ttt_x"]} ⭕: {w["ttt_o"]} ⚫: {w["rev_black"]} ⚪: {w["rev_white"]}**\n'
         return md
@@ -372,6 +379,8 @@ class GameManager:
                 sys.exit(0)
             content = self._replace_section(content, 'GUESS', self.guess.render(state, self.owner, self.repo_name))
 
+        # result['message'] を保存してから stats に反映
+        self._current_result_message = result['message']
         content = self._apply_stats(content, include_current=True)
         self._update_readme(content, readme_obj)
         self._issue.create_comment(result['message'])
