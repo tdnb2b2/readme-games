@@ -74,29 +74,21 @@ class GameManager:
         return sorted(self.data['players'].items(), key=lambda x: x[1]['total'], reverse=True)[:limit]
     
     def parse_move(self):
-        """
-        Parse game information from issue title.
-        Expected formats:
-        - Tic-Tac-Toe: Move A1
-        - Reversi: Move D4
-        - Number Guess: 50
-        - Number Guess: Start New Game
-        - リセット oxゲーム / リセット ox (admin only)
-        - リセット オセロ / リセット reversi (admin only)
-        - リセット 数当て / リセット guess (admin only)
-        """
         title = self.issue_title.strip()
         
-        # Admin reset commands (Japanese simple format)
+        # Admin reset commands
         if self.actor == self.admin_user:
-            # OX game reset
-            if re.search(r'リセット.*(ox|まるばつ|○×)', title, re.IGNORECASE):
+            # OX / Tic-Tac-Toe reset
+            # matches: リセット ox, リセット　ox, リセット oxゲーム, リセット まるばつ, リセット ○×, リセット tictactoe
+            if re.search(r'リセット\s*(ox|oxゲーム|まるばつ|○×|tictactoe|tic)', title, re.IGNORECASE):
                 return 'tictactoe', 'reset'
-            # Reversi reset
-            if re.search(r'リセット.*(オセロ|reversi|リバーシ)', title, re.IGNORECASE):
+            # Reversi / Othello reset
+            # matches: リセット オセロ, リセット オセロゲーム, リセット reversi, リセット リバーシ
+            if re.search(r'リセット\s*(オセロ|オセロゲーム|reversi|リバーシ)', title, re.IGNORECASE):
                 return 'reversi', 'reset'
             # Number guess reset
-            if re.search(r'リセット.*(数当て|guess|ゲス)', title, re.IGNORECASE):
+            # matches: リセット 数当て, リセット guess, リセット ゲス, リセット 数当
+            if re.search(r'リセット\s*(数当て?|数当|guess|ゲス)', title, re.IGNORECASE):
                 return 'guess', 'reset'
         
         # Tic-Tac-Toe: Move A1 to C3
