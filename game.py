@@ -2,6 +2,7 @@
 import os
 import re
 import json
+import sys
 from pathlib import Path
 from github import Github, GithubException
 from games.tictactoe import TicTacToe
@@ -30,7 +31,6 @@ class GameManager:
         if self.stats_file.exists():
             with open(self.stats_file) as f:
                 data = json.load(f)
-            # migrate: ensure 'games' key exists
             if 'games' not in data:
                 data['games'] = {'tictactoe': 0, 'reversi': 0, 'guess': 0}
             return data
@@ -47,8 +47,6 @@ class GameManager:
     def _record(self, game_key):
         key_map = {'ttt': 'tictactoe', 'rev': 'reversi', 'guess': 'guess'}
         game_type = key_map.get(game_key, game_key)
-
-        # per-player stats
         p = self.stats['players']
         if self.actor not in p:
             p[self.actor] = {'total': 0, 'tictactoe': 0, 'reversi': 0, 'guess': 0}
@@ -57,8 +55,6 @@ class GameManager:
             p[self.actor][game_type] += 1
         if self.actor not in self.stats['participants']:
             self.stats['participants'].append(self.actor)
-
-        # per-game stats
         g = self.stats['games']
         if game_type not in g:
             g[game_type] = 0
@@ -66,7 +62,6 @@ class GameManager:
 
     def parse(self):
         t = self.issue_title
-
         if self.actor == self.admin_user:
             if re.search(r'reset.*(ox|tictactoe|tic)', t, re.I):
                 return 'ttt_reset', None
@@ -74,19 +69,14 @@ class GameManager:
                 return 'rev_reset', None
             if re.search(r'reset.*(guess)', t, re.I):
                 return 'guess_reset', None
-
         m = re.match(r'Tic-Tac-Toe:\s*Put\s+([A-Ca-c][1-3])\s*$', t)
         if m: return 'ttt', m.group(1).upper()
-
         m = re.match(r'Reversi:\s*Put\s+([A-Ha-h][1-8])\s*$', t)
         if m: return 'rev', m.group(1).upper()
-
         m = re.match(r'Number\s+Guess:\s*(\d+)\s*$', t, re.I)
         if m: return 'guess', int(m.group(1))
-
         if re.match(r'Number\s+Guess:\s*Start', t, re.I):
             return 'guess', 'start'
-
         return None, None
 
     def _get_readme(self):
@@ -121,7 +111,7 @@ class GameManager:
         )[:10]
         if not top:
             return '*No players yet. Be the first!*'
-        md = '| Rank | Player | Total | Tic-Tac-Toe | Reversi | Number Guess |\n'
+        md  = '| Rank | Player | Total | Tic-Tac-Toe | Reversi | Number Guess |\n'
         md += '|:----:|--------|:-----:|:-----------:|:-------:|:------------:|\n'
         for i, (player, s) in enumerate(top, 1):
             rank = ['1st', '2nd', '3rd'][i-1] if i <= 3 else f'{i}th'
@@ -130,26 +120,27 @@ class GameManager:
 
     def _render_game_stats(self):
         g = self.stats.get('games', {})
-        ttt_total = g.get('tictactoe', 0)
-        rev_total = g.get('reversi', 0)
+        ttt_total   = g.get('tictactoe', 0)
+        rev_total   = g.get('reversi', 0)
         guess_total = g.get('guess', 0)
         grand_total = ttt_total + rev_total + guess_total
-
+        if grand_total == 0:
+            return '*No moves played yet.*'
         games = [
             ('Tic-Tac-Toe', ttt_total),
             ('Reversi / Othello', rev_total),
             ('Number Guessing', guess_total),
         ]
         games_sorted = sorted(games, key=lambda x: x[1], reverse=True)
-
-        md = f'**Total moves played: {grand_total}**\n\n'
-        md += '| Rank | Game | Moves Played |\n'
-        md += '|:----:|------|:------------:|\n'
+        md  = f'**Total moves played: {grand_total}**\n\n'
+        md += '| Rank | Game | Moves |\n'
+        md += '|:----:|------|:-----:|\n'
         for i, (name, count) in enumerate(games_sorted, 1):
             rank = ['1st', '2nd', '3rd'][i-1] if i <= 3 else f'{i}th'
             bar_len = int((count / max(grand_total, 1)) * 20)
-            bar = '|' * bar_len + '.' * (20 - bar_len)
-            md += f'| {rank} | {name} | {count} `{bar}` |\n'
+            bar = '#' * bar_len + '-' * (20 - bar_len)
+            pct = round(count / grand_total * 100) if grand_total else 0
+            md += f'| {rank} | {name} | {count} ({pct}%) `{bar}` |\n'
         return md
 
     def _render_participants(self):
@@ -165,6 +156,7 @@ class GameManager:
     def run(self):
         action, value = self.parse()
 
+        # Unknown command: close issue silently without failing the Action
         if action is None:
             self.issue.create_comment(
                 f'Unknown command: `{self.issue_title}`\n\n'
@@ -175,7 +167,7 @@ class GameManager:
                 '- `Number Guess: Start New Game`'
             )
             self.issue.edit(state='closed')
-            return
+            sys.exit(0)  # exit cleanly so Action shows green
 
         readme_obj, content = self._get_readme()
         result = None
@@ -186,7 +178,7 @@ class GameManager:
             self._update_readme(content, readme_obj)
             self.issue.create_comment(f'Tic-Tac-Toe reset by @{self.actor}')
             self.issue.edit(state='closed')
-            return
+            sys.exit(0)
 
         if action == 'rev_reset':
             state = {'board': self.rev._empty_board(), 'turn': self.rev.BLACK, 'log': []}
@@ -194,7 +186,7 @@ class GameManager:
             self._update_readme(content, readme_obj)
             self.issue.create_comment(f'Reversi reset by @{self.actor}')
             self.issue.edit(state='closed')
-            return
+            sys.exit(0)
 
         if action == 'guess_reset':
             state = {'number': None, 'attempts': [], 'solved': False}
@@ -202,7 +194,7 @@ class GameManager:
             self._update_readme(content, readme_obj)
             self.issue.create_comment(f'Number Guess reset by @{self.actor}')
             self.issue.edit(state='closed')
-            return
+            sys.exit(0)
 
         if action == 'ttt':
             section = self._section(content, 'TICTACTOE')
@@ -211,7 +203,7 @@ class GameManager:
             if not result['success']:
                 self.issue.create_comment(result['message'])
                 self.issue.edit(state='closed')
-                return
+                sys.exit(0)
             content = self._replace_section(content, 'TICTACTOE', self.ttt.render(state, self.owner, self.repo_name))
 
         elif action == 'rev':
@@ -221,7 +213,7 @@ class GameManager:
             if not result['success']:
                 self.issue.create_comment(result['message'])
                 self.issue.edit(state='closed')
-                return
+                sys.exit(0)
             content = self._replace_section(content, 'REVERSI', self.rev.render(state, self.owner, self.repo_name))
 
         elif action == 'guess':
@@ -231,7 +223,7 @@ class GameManager:
             if not result['success']:
                 self.issue.create_comment(result['message'])
                 self.issue.edit(state='closed')
-                return
+                sys.exit(0)
             content = self._replace_section(content, 'GUESS', self.guess.render(state, self.owner, self.repo_name))
 
         self._record(action)
@@ -244,6 +236,7 @@ class GameManager:
         self._update_readme(content, readme_obj)
         self.issue.create_comment(result['message'])
         self.issue.edit(state='closed')
+        sys.exit(0)
 
 if __name__ == '__main__':
     GameManager().run()

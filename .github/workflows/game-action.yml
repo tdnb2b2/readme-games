@@ -42,6 +42,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No stats changes"
           else
+            git pull --rebase origin main
             git commit -m "Update stats"
             git push origin main
           fi
