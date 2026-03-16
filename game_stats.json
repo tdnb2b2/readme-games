@@ -1,10 +1,10 @@
 {
   "players": {
     "tadanobutubutu": {
-      "total": 2,
+      "total": 3,
       "tictactoe": 0,
       "reversi": 0,
-      "guess": 2
+      "guess": 3
     }
   },
   "participants": [
@@ -13,6 +13,6 @@
   "games": {
     "tictactoe": 0,
     "reversi": 0,
-    "guess": 2
+    "guess": 3
   }
 }
