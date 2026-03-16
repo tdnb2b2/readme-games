@@ -2,7 +2,8 @@
 import os
 import re
 import sys
-from github import Github
+import json
+import urllib.request
 from games.tictactoe import TicTacToe
 from games.reversi import Reversi
 from games.guess import NumberGuess
@@ -11,28 +12,111 @@ TTT_PAT   = re.compile(r'^Tic-Tac-Toe:\s*(?:Put|Move)\s+[A-Ca-c][1-3]\s*$')
 REV_PAT   = re.compile(r'^Reversi:\s*Put\s+[A-Ha-h][1-8]\s*$')
 GUESS_PAT = re.compile(r'^Number\s+Guess:\s*\d+\s*$', re.I)
 
+# issue comment に含まれる勝利パターン
+TTT_WIN_X   = re.compile(r'\u274c wins!')
+TTT_WIN_O   = re.compile(r'\u2b55 wins!')
+REV_WIN_B   = re.compile(r'Game over!.*\u26ab.*wins')
+REV_WIN_W   = re.compile(r'Game over!.*\u26aa.*wins')
+
+GRAPHQL_URL = 'https://api.github.com/graphql'
+
 
 class GameManager:
     def __init__(self):
-        self.g           = Github(os.environ['GITHUB_TOKEN'])
-        self.repo        = self.g.get_repo(os.environ['REPO'])
+        self.token       = os.environ['GITHUB_TOKEN']
+        self.repo_full   = os.environ['REPO']           # owner/repo
         self.issue_num   = int(os.environ['ISSUE_NUMBER'])
-        self.issue       = self.repo.get_issue(self.issue_num)
         self.actor       = os.environ['ACTOR']
         self.issue_title = os.environ.get('ISSUE_TITLE', '').strip()
         self.admin_user  = 'tadanobutubutu'
-        self.owner, self.repo_name = os.environ['REPO'].split('/')
+        self.owner, self.repo_name = self.repo_full.split('/')
+
+        # PyGithub は REST 操作のみに使用
+        from github import Github
+        self._gh   = Github(self.token)
+        self._repo = self._gh.get_repo(self.repo_full)
+        self._issue = self._repo.get_issue(self.issue_num)
 
         self.ttt   = TicTacToe()
         self.rev   = Reversi()
         self.guess = NumberGuess()
 
     # ------------------------------------------------------------------ #
-    #  有効手のみ issues から集計                                          #
+    #  GraphQL ヘルパー                                                    #
+    # ------------------------------------------------------------------ #
+    def _graphql(self, query, variables=None):
+        payload = json.dumps({'query': query, 'variables': variables or {}}).encode()
+        req = urllib.request.Request(
+            GRAPHQL_URL,
+            data=payload,
+            headers={
+                'Authorization': f'bearer {self.token}',
+                'Content-Type': 'application/json',
+            }
+        )
+        with urllib.request.urlopen(req) as resp:
+            return json.loads(resp.read())
+
+    # ------------------------------------------------------------------ #
+    #  GraphQL で closed issues を一括取得（タイトル + 作成者 + コメント） #
+    # ------------------------------------------------------------------ #
+    def _fetch_closed_issues(self):
+        """
+        全ての closed issue の (number, title, login, comments[body]) を返す。
+        GraphQL でページネーションしながら一括取得。
+        """
+        query = """
+        query($owner:String!, $repo:String!, $after:String) {
+          repository(owner:$owner, name:$repo) {
+            issues(states:CLOSED, first:100, after:$after,
+                   orderBy:{field:CREATED_AT, direction:ASC}) {
+              pageInfo { hasNextPage endCursor }
+              nodes {
+                number
+                title
+                author { login }
+                comments(first:5) {
+                  nodes { body }
+                }
+              }
+            }
+          }
+        }
+        """
+        issues = []
+        cursor = None
+        while True:
+            data = self._graphql(query, {
+                'owner': self.owner,
+                'repo':  self.repo_name,
+                'after': cursor
+            })
+            conn = data['data']['repository']['issues']
+            issues.extend(conn['nodes'])
+            if not conn['pageInfo']['hasNextPage']:
+                break
+            cursor = conn['pageInfo']['endCursor']
+        return issues
+
+    # ------------------------------------------------------------------ #
+    #  勝利パターン判定                                                    #
+    # ------------------------------------------------------------------ #
+    @staticmethod
+    def _detect_win(comments):
+        """コメントのリストから (winner_key or None) を返す"""
+        for c in comments:
+            body = c.get('body', '')
+            if TTT_WIN_X.search(body):  return 'ttt_x'
+            if TTT_WIN_O.search(body):  return 'ttt_o'
+            if REV_WIN_B.search(body):  return 'rev_black'
+            if REV_WIN_W.search(body):  return 'rev_white'
+        return None
+
+    # ------------------------------------------------------------------ #
+    #  集計（GraphQL データから）                                        #
     # ------------------------------------------------------------------ #
     @staticmethod
     def _title_to_type(title):
-        """TTT_PAT / REV_PAT / GUESS_PAT にマッチした時だけ有効。リセット系・不明は None。"""
         if TTT_PAT.match(title):   return 'tictactoe'
         if REV_PAT.match(title):   return 'reversi'
         if GUESS_PAT.match(title): return 'guess'
@@ -41,37 +125,74 @@ class GameManager:
     @staticmethod
     def _add_count(players, games, login, gtype):
         if login not in players:
-            players[login] = {'total': 0, 'tictactoe': 0, 'reversi': 0, 'guess': 0}
+            players[login] = {
+                'total': 0, 'tictactoe': 0, 'reversi': 0, 'guess': 0,
+                'ttt_wins_x': 0, 'ttt_wins_o': 0,
+                'rev_wins_black': 0, 'rev_wins_white': 0,
+            }
         players[login]['total'] += 1
         players[login][gtype]   += 1
         games[gtype]            += 1
 
     def _compute_stats(self, include_current=False):
-        """
-        閉じた全 issues を走査して有効手のみ集計する。
-        include_current=True の時だけ、現在処理中の issue を先行カウントする。
-        """
         players = {}
         games   = {'tictactoe': 0, 'reversi': 0, 'guess': 0}
+        wins    = {'ttt_x': 0, 'ttt_o': 0, 'rev_black': 0, 'rev_white': 0}
 
-        # 現在処理中の issue はまだ closed になっていないので、
-        # 有効手の場合のみ先行カウントする
+        # 現在処理中 issue の先行カウント（有効手の場合のみ）
         if include_current:
             gtype = self._title_to_type(self.issue_title)
             if gtype:
                 self._add_count(players, games, self.actor, gtype)
 
-        for issue in self.repo.get_issues(state='closed'):
-            if issue.number == self.issue_num:
+        closed = self._fetch_closed_issues()
+        for issue in closed:
+            if issue['number'] == self.issue_num:
                 continue
-            gtype = self._title_to_type(issue.title.strip())
-            if gtype is None:
-                continue
-            self._add_count(players, games, issue.user.login, gtype)
+            title  = (issue.get('title') or '').strip()
+            login  = (issue.get('author') or {}).get('login') or 'ghost'
+            comments = [c for c in (issue.get('comments') or {}).get('nodes', [])]
+
+            gtype = self._title_to_type(title)
+            if gtype:
+                self._add_count(players, games, login, gtype)
+
+            # 勝利記録：コメントから検出
+            win = self._detect_win(comments)
+            if win:
+                wins[win] += 1
+                # 最後に手を打ったプレイヤーに勝利を記録
+                if gtype and login in players:
+                    key_map = {
+                        'ttt_x':     'ttt_wins_x',
+                        'ttt_o':     'ttt_wins_o',
+                        'rev_black': 'rev_wins_black',
+                        'rev_white': 'rev_wins_white',
+                    }
+                    players[login][key_map[win]] += 1
+
+        # 現在 issue の勝利も先行反映（include_current時）
+        if include_current:
+            win = self._detect_win_from_current_result()
+            if win:
+                wins[win] += 1
+                key_map = {
+                    'ttt_x':     'ttt_wins_x',
+                    'ttt_o':     'ttt_wins_o',
+                    'rev_black': 'rev_wins_black',
+                    'rev_white': 'rev_wins_white',
+                }
+                if self.actor in players:
+                    players[self.actor][key_map[win]] += 1
 
         participants = sorted(players.keys(),
                               key=lambda p: players[p]['total'], reverse=True)
-        return {'players': players, 'participants': participants, 'games': games}
+        return {'players': players, 'participants': participants,
+                'games': games, 'wins': wins}
+
+    def _detect_win_from_current_result(self):
+        """game.py 内で現在 issue の検出は result で判定するのでここは常に None"""
+        return None
 
     # ------------------------------------------------------------------ #
     #  レンダリング                                                         #
@@ -81,12 +202,17 @@ class GameManager:
                      key=lambda x: x[1]['total'], reverse=True)[:10]
         if not top:
             return '*No players yet. Be the first!*'
-        md  = '| Rank | Player | Total | Tic-Tac-Toe | Reversi | Number Guess |\n'
-        md += '|:----:|--------|:-----:|:-----------:|:-------:|:------------:|\n'
+        md  = '| Rank | Player | Total | TTT | Reversi | Guess | ❌W | ⭕W | ⚫W | ⚪W |\n'
+        md += '|:----:|--------|:-----:|:---:|:-------:|:-----:|:---:|:---:|:---:|:---:|\n'
         for i, (player, s) in enumerate(top, 1):
             rank = ['1st', '2nd', '3rd'][i-1] if i <= 3 else f'{i}th'
             md += (f'| {rank} | [@{player}](https://github.com/{player}) '
-                   f'| {s["total"]} | {s["tictactoe"]} | {s["reversi"]} | {s["guess"]} |\n')
+                   f'| {s["total"]} | {s["tictactoe"]} | {s["reversi"]} | {s["guess"]} '
+                   f'| {s["ttt_wins_x"]} | {s["ttt_wins_o"]} '
+                   f'| {s["rev_wins_black"]} | {s["rev_wins_white"]} |\n')
+        # 右下に割れ总勝利数
+        w = stats['wins']
+        md += f'\n**Game wins — ❌: {w["ttt_x"]} ⭕: {w["ttt_o"]} ⚫: {w["rev_black"]} ⚪: {w["rev_white"]}**\n'
         return md
 
     def _render_game_stats(self, stats):
@@ -141,7 +267,7 @@ class GameManager:
         return None, None
 
     def _get_readme(self):
-        obj = self.repo.get_contents('README.md')
+        obj = self._repo.get_contents('README.md')
         return obj, obj.decoded_content.decode('utf-8')
 
     def _section(self, content, name):
@@ -156,14 +282,13 @@ class GameManager:
         )
 
     def _update_readme(self, content, readme_obj):
-        self.repo.update_file(
+        self._repo.update_file(
             'README.md',
             f'Update game by @{self.actor}',
             content, readme_obj.sha, branch='main'
         )
 
     def _apply_stats(self, content, include_current=False):
-        """stats を集計して README の 3 セクションを差し替える。"""
         stats   = self._compute_stats(include_current=include_current)
         content = self._replace_section(content, 'LEADERBOARD',  self._render_leaderboard(stats))
         content = self._replace_section(content, 'GAME_STATS',   self._render_game_stats(stats))
@@ -177,27 +302,26 @@ class GameManager:
         action, value = self.parse()
 
         if action is None:
-            self.issue.create_comment(
+            self._issue.create_comment(
                 f'Unknown command: `{self.issue_title}`\n\n'
                 'Expected formats:\n'
                 '- `Tic-Tac-Toe: Put A1` (A1-C3)\n'
                 '- `Reversi: Put D4` (A1-H8)\n'
                 '- `Number Guess: 50` (1-100)'
             )
-            self.issue.edit(state='closed')
+            self._issue.edit(state='closed')
             sys.exit(0)
 
         readme_obj, content = self._get_readme()
         result = None
 
-        # --- リセット系（現在 issue は有効手でないので include_current=False）---
         if action == 'ttt_reset':
             state   = {'board': self.ttt._empty_board(), 'turn': self.ttt.X, 'log': []}
             content = self._replace_section(content, 'TICTACTOE', self.ttt.render(state, self.owner, self.repo_name))
             content = self._apply_stats(content, include_current=False)
             self._update_readme(content, readme_obj)
-            self.issue.create_comment(f'Tic-Tac-Toe reset by @{self.actor}')
-            self.issue.edit(state='closed')
+            self._issue.create_comment(f'Tic-Tac-Toe reset by @{self.actor}')
+            self._issue.edit(state='closed')
             sys.exit(0)
 
         if action == 'rev_reset':
@@ -205,8 +329,8 @@ class GameManager:
             content = self._replace_section(content, 'REVERSI', self.rev.render(state, self.owner, self.repo_name))
             content = self._apply_stats(content, include_current=False)
             self._update_readme(content, readme_obj)
-            self.issue.create_comment(f'Reversi reset by @{self.actor}')
-            self.issue.edit(state='closed')
+            self._issue.create_comment(f'Reversi reset by @{self.actor}')
+            self._issue.edit(state='closed')
             sys.exit(0)
 
         if action == 'guess_reset':
@@ -214,18 +338,17 @@ class GameManager:
             content = self._replace_section(content, 'GUESS', self.guess.render(state, self.owner, self.repo_name))
             content = self._apply_stats(content, include_current=False)
             self._update_readme(content, readme_obj)
-            self.issue.create_comment(f'Number Guess reset by @{self.actor}')
-            self.issue.edit(state='closed')
+            self._issue.create_comment(f'Number Guess reset by @{self.actor}')
+            self._issue.edit(state='closed')
             sys.exit(0)
 
-        # --- 有効手 ---
         if action == 'ttt':
             section = self._section(content, 'TICTACTOE')
             state   = self.ttt.parse_state(section)
             result  = self.ttt.place(state, value, self.actor)
             if not result['success']:
-                self.issue.create_comment(result['message'])
-                self.issue.edit(state='closed')
+                self._issue.create_comment(result['message'])
+                self._issue.edit(state='closed')
                 sys.exit(0)
             content = self._replace_section(content, 'TICTACTOE', self.ttt.render(state, self.owner, self.repo_name))
 
@@ -234,8 +357,8 @@ class GameManager:
             state   = self.rev.parse_state(section)
             result  = self.rev.place(state, value, self.actor)
             if not result['success']:
-                self.issue.create_comment(result['message'])
-                self.issue.edit(state='closed')
+                self._issue.create_comment(result['message'])
+                self._issue.edit(state='closed')
                 sys.exit(0)
             content = self._replace_section(content, 'REVERSI', self.rev.render(state, self.owner, self.repo_name))
 
@@ -244,16 +367,15 @@ class GameManager:
             state   = self.guess.parse_state(section)
             result  = self.guess.place(state, value, self.actor)
             if not result['success']:
-                self.issue.create_comment(result['message'])
-                self.issue.edit(state='closed')
+                self._issue.create_comment(result['message'])
+                self._issue.edit(state='closed')
                 sys.exit(0)
             content = self._replace_section(content, 'GUESS', self.guess.render(state, self.owner, self.repo_name))
 
-        # 有効手の場合のみ include_current=True
         content = self._apply_stats(content, include_current=True)
         self._update_readme(content, readme_obj)
-        self.issue.create_comment(result['message'])
-        self.issue.edit(state='closed')
+        self._issue.create_comment(result['message'])
+        self._issue.edit(state='closed')
         sys.exit(0)
 
 
