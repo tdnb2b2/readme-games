@@ -69,11 +69,11 @@ Click any square to start!
 ## Number Guessing (1-100)
 
 <!-- GUESS_START -->
-**Guess the secret number** | Range: **74 – 100** | Attempts: 3
+**Guess the secret number** | Range: **74 – 86** | Attempts: 4
 
-<!-- GUESS_STATE:{"number":80,"attempts":[{"player":"kk5fgxtdxb-debug","guess":50},{"player":"kk5fgxtdxb-debug","guess":63},{"player":"kk5fgxtdxb-debug","guess":73}],"solved":false} -->
+<!-- GUESS_STATE:{"number":80,"attempts":[{"player":"kk5fgxtdxb-debug","guess":50},{"player":"kk5fgxtdxb-debug","guess":63},{"player":"kk5fgxtdxb-debug","guess":73},{"player":"kk5fgxtdxb-debug","guess":87}],"solved":false} -->
 
-Click to guess: [80](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+80&body=Just+click+Submit+new+issue) · [87](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+87&body=Just+click+Submit+new+issue) · [93](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+93&body=Just+click+Submit+new+issue)
+Click to guess: [77](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+77&body=Just+click+Submit+new+issue) · [80](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+80&body=Just+click+Submit+new+issue) · [83](https://github.com/tdnb2b2/readme-games/issues/new?title=Number+Guess:+83&body=Just+click+Submit+new+issue)
 
 <details>
   <summary>Last 5 attempts</summary>
@@ -83,6 +83,7 @@ Click to guess: [80](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 | 1 | **50** | [@kk5fgxtdxb-debug](https://github.com/kk5fgxtdxb-debug) | Higher 🔺 |
 | 2 | **63** | [@kk5fgxtdxb-debug](https://github.com/kk5fgxtdxb-debug) | Higher 🔺 |
 | 3 | **73** | [@kk5fgxtdxb-debug](https://github.com/kk5fgxtdxb-debug) | Close 🔺 |
+| 4 | **87** | [@kk5fgxtdxb-debug](https://github.com/kk5fgxtdxb-debug) | Close 🔻 |
 
 </details>
 
@@ -96,7 +97,7 @@ Click to guess: [80](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 | Rank | Player | Total | TTT | Reversi | Guess | ❌W | ⭕W | ⚫W | ⚪W |
 |:----:|--------|:-----:|:---:|:-------:|:-----:|:---:|:---:|:---:|:---:|
 | 1st | [@tadanobutubutu](https://github.com/tadanobutubutu) | 120 | 30 | 71 | 19 | 3 | 1 | 1 | 0 |
-| 2nd | [@kk5fgxtdxb-debug](https://github.com/kk5fgxtdxb-debug) | 3 | 0 | 0 | 3 | 0 | 0 | 0 | 0 |
+| 2nd | [@kk5fgxtdxb-debug](https://github.com/kk5fgxtdxb-debug) | 4 | 0 | 0 | 4 | 0 | 0 | 0 | 0 |
 
 **Game wins — ❌: 3 ⭕: 1 ⚫: 1 ⚪: 0**
 
@@ -108,7 +109,7 @@ Click to guess: [80](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 <!-- PARTICIPANTS_START -->
 **Total participants: 2**
 
-[![@tadanobutubutu](https://img.shields.io/badge/@tadanobutubutu-120_moves-blue)](https://github.com/tadanobutubutu) [![@kk5fgxtdxb-debug](https://img.shields.io/badge/@kk5fgxtdxb-debug-3_moves-blue)](https://github.com/kk5fgxtdxb-debug) 
+[![@tadanobutubutu](https://img.shields.io/badge/@tadanobutubutu-120_moves-blue)](https://github.com/tadanobutubutu) [![@kk5fgxtdxb-debug](https://img.shields.io/badge/@kk5fgxtdxb-debug-4_moves-blue)](https://github.com/kk5fgxtdxb-debug) 
 <!-- PARTICIPANTS_END -->
 
 </details>
@@ -118,13 +119,13 @@ Click to guess: [80](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 ## Most Played Games
 
 <!-- GAME_STATS_START -->
-**Total moves played: 123**
+**Total moves played: 124**
 
 | Rank | Game | Moves |
 |:----:|------|:-----:|
-| 1st | Reversi / Othello | 71 (58%) `###########---------` |
+| 1st | Reversi / Othello | 71 (57%) `###########---------` |
 | 2nd | Tic-Tac-Toe | 30 (24%) `####----------------` |
-| 3rd | Number Guessing | 22 (18%) `###-----------------` |
+| 3rd | Number Guessing | 23 (19%) `###-----------------` |
 
 <!-- GAME_STATS_END -->
 
