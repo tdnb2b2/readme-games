@@ -44,23 +44,23 @@ Click any square to start!
 ## Reversi / Othello
 
 <!-- REVERSI_START -->
-**Turn:** ⚪ | ⚫ 4 – ⚪ 1
+**Turn:** ⚫ | ⚫ 3 – ⚪ 3
 
-<!-- REV_STATE:{"board":[["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","white","black","empty","empty","empty"],["empty","empty","empty","black","black","black","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"]],"turn":"white","log":[{"player":"MoDevIO","pos":"F5","color":"black"}]} -->
+<!-- REV_STATE:{"board":[["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","white","white","white","empty","empty"],["empty","empty","empty","black","black","black","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"],["empty","empty","empty","empty","empty","empty","empty","empty"]],"turn":"black","log":[{"player":"MoDevIO","pos":"F5","color":"black"},{"player":"MoDevIO","pos":"F4","color":"white"}]} -->
 
 |   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** |   |
 |---|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-:|
 | **1** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **1** |
 | **2** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **2** |
-| **3** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **3** |
-| **4** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26aa.svg" width=36px> | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg" width=36px> | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+F4&body=Just+click+Submit+new+issue) | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **4** |
+| **3** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+C3&body=Just+click+Submit+new+issue) | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+D3&body=Just+click+Submit+new+issue) | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+E3&body=Just+click+Submit+new+issue) | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+F3&body=Just+click+Submit+new+issue) | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+G3&body=Just+click+Submit+new+issue) | &nbsp;&nbsp;&nbsp; | **3** |
+| **4** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26aa.svg" width=36px> | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26aa.svg" width=36px> | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26aa.svg" width=36px> | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **4** |
 | **5** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg" width=36px> | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg" width=36px> | <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/26ab.svg" width=36px> | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **5** |
-| **6** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+D6&body=Just+click+Submit+new+issue) | &nbsp;&nbsp;&nbsp; | [&nbsp;&nbsp;&nbsp;](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+F6&body=Just+click+Submit+new+issue) | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **6** |
+| **6** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **6** |
 | **7** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **7** |
 | **8** | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; | **8** |
 |   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** |   |
 
-[D6](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+D6&body=Just+click+Submit+new+issue) · [F4](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+F4&body=Just+click+Submit+new+issue) · [F6](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+F6&body=Just+click+Submit+new+issue)
+[C3](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+C3&body=Just+click+Submit+new+issue) · [D3](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+D3&body=Just+click+Submit+new+issue) · [E3](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+E3&body=Just+click+Submit+new+issue) · [F3](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+F3&body=Just+click+Submit+new+issue) · [G3](https://github.com/tdnb2b2/readme-games/issues/new?title=Reversi:+Put+G3&body=Just+click+Submit+new+issue)
 
 <details>
   <summary>Last placements</summary>
@@ -68,6 +68,7 @@ Click any square to start!
 | Position | Player |
 | :------: | :----- |
 | `F5` (⚫) | [@MoDevIO](https://github.com/MoDevIO) |
+| `F4` (⚪) | [@MoDevIO](https://github.com/MoDevIO) |
 
 </details>
 
@@ -96,7 +97,7 @@ Click to guess: [25](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 |:----:|--------|:-----:|:---:|:-------:|:-----:|:---:|:---:|:---:|:---:|
 | 1st | [@tadanobutubutu](https://github.com/tadanobutubutu) | 120 | 30 | 71 | 19 | 3 | 1 | 1 | 0 |
 | 2nd | [@kk5fgxtdxb-debug](https://github.com/kk5fgxtdxb-debug) | 7 | 0 | 0 | 7 | 0 | 0 | 0 | 0 |
-| 3rd | [@MoDevIO](https://github.com/MoDevIO) | 1 | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
+| 3rd | [@MoDevIO](https://github.com/MoDevIO) | 2 | 0 | 2 | 0 | 0 | 0 | 0 | 0 |
 
 **Game wins — ❌: 3 ⭕: 1 ⚫: 1 ⚪: 0**
 
@@ -108,7 +109,7 @@ Click to guess: [25](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 <!-- PARTICIPANTS_START -->
 **Total participants: 3**
 
-[![@tadanobutubutu](https://img.shields.io/badge/@tadanobutubutu-120_moves-blue)](https://github.com/tadanobutubutu) [![@kk5fgxtdxb-debug](https://img.shields.io/badge/@kk5fgxtdxb-debug-7_moves-blue)](https://github.com/kk5fgxtdxb-debug) [![@MoDevIO](https://img.shields.io/badge/@MoDevIO-1_moves-blue)](https://github.com/MoDevIO) 
+[![@tadanobutubutu](https://img.shields.io/badge/@tadanobutubutu-120_moves-blue)](https://github.com/tadanobutubutu) [![@kk5fgxtdxb-debug](https://img.shields.io/badge/@kk5fgxtdxb-debug-7_moves-blue)](https://github.com/kk5fgxtdxb-debug) [![@MoDevIO](https://img.shields.io/badge/@MoDevIO-2_moves-blue)](https://github.com/MoDevIO) 
 <!-- PARTICIPANTS_END -->
 
 </details>
@@ -118,11 +119,11 @@ Click to guess: [25](https://github.com/tdnb2b2/readme-games/issues/new?title=Nu
 ## Most Played Games
 
 <!-- GAME_STATS_START -->
-**Total moves played: 128**
+**Total moves played: 129**
 
 | Rank | Game | Moves |
 |:----:|------|:-----:|
-| 1st | Reversi / Othello | 72 (56%) `###########---------` |
+| 1st | Reversi / Othello | 73 (57%) `###########---------` |
 | 2nd | Tic-Tac-Toe | 30 (23%) `####----------------` |
 | 3rd | Number Guessing | 26 (20%) `####----------------` |
 
